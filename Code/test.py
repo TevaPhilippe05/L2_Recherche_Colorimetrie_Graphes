@@ -7,8 +7,8 @@ def rand_graph(n,p):
             x = random.random()
 
             if x < p:
-                l_adj[i].append(j)
-                l_adj[j].append(i)
+                l_adj[i].append(j+1)
+                l_adj[j].append(i+1)
     return l_adj
 
-print(rand_graph(8,0.3))
+print(rand_graph(8,0.8))
