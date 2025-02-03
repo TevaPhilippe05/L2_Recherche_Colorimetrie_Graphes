@@ -3,7 +3,6 @@ import pygame
 import math
 
 class Graphe:
-
     def __init__(self, n):
         self.taille = n
         self.l_adj = [[]for i in range(self.taille)]
@@ -68,6 +67,16 @@ class Graphe:
             if color == color_v:
                 couleur_differente = False
         return couleur_differente
+
+    def verification_voisin_point_couleur(self, point:int, couleur):
+        """Vérifie que tout les voisins d'un points ont une couleur différente"""
+        ind = point - 1
+        couleur_presente = False
+        for q in range(1,len(self.l_adj[ind])):
+            color_v = self.l_adj[self.l_adj[ind][q]-1][0][2] # Sélectionne la couleur du voisin q du point du graphe
+            if color_v == couleur:
+                couleur_presente = True
+        return couleur_presente
     
     def verification_colorimetrie_graphe(self):
         """Vérifie que tout les points du graphes on des voisins avec des couleurs différentes"""
@@ -76,3 +85,16 @@ class Graphe:
             if not self.verification_voisin_point(r):
                 couleur_differente = False
         return couleur_differente
+
+
+    # Algorithme glouton 1
+    def glouton1(self, screen, liste_couleur, ordre_priorite):
+        """Attribue les couleurs du graphes avec un ordre de priorité"""
+        for elem in ordre_priorite:
+            couleur_valide = False
+            ind_couleur = 0
+            while not couleur_valide and ind_couleur < len(ordre_priorite):
+                couleur_valide = not self.verification_voisin_point_couleur(elem, liste_couleur[ind_couleur])
+                if couleur_valide:
+                    self.l_adj[elem - 1][0][2] = liste_couleur[ind_couleur]
+                ind_couleur += 1
