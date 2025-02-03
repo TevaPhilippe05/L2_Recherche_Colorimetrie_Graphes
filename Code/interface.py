@@ -28,7 +28,7 @@ RADIUS = int(WIDTH * RADIUS_RATIO)
 
 G.force_graph_coord(graphe)
 # G.couleur_aleatoire()
-G.glouton1(screen, [(255,255,255),(0,200,0), (0,0,200), (200,0,200), (128,0,128), (128,128,128)],[1,2,4,3,5,6,7,8])
+G.glouton1([(100,155,155),(0,200,0), (0,0,200), (200,0,200), (128,0,128), (128,128,128)],[1,2,4,3,5,6,7,8])
 
 running = True
 while running:

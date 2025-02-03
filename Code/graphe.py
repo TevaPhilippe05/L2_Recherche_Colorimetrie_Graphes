@@ -42,7 +42,7 @@ class Graphe:
             x = self.l_adj[k][0][0]
             y = self.l_adj[k][0][1]
             color = self.l_adj[k][0][2]
-            pygame.draw.circle(screen, color, (int(x), int(y)), 8)
+            pygame.draw.circle(screen, color, (int(x), int(y)), 14)
 
     def couleur_aleatoire(self):
         """Permet d'attribuer des couleurs aléatoires aux points du graphe"""
@@ -88,7 +88,7 @@ class Graphe:
 
 
     # Algorithme glouton 1
-    def glouton1(self, screen, liste_couleur, ordre_priorite):
+    def glouton1(self,liste_couleur, ordre_priorite):
         """Attribue les couleurs du graphes avec un ordre de priorité"""
         for elem in ordre_priorite:
             couleur_valide = False
