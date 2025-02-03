@@ -23,6 +23,10 @@ class Graphe:
                     self.l_adj[i].append(j+1)
                     self.l_adj[j].append(i+1)
 
+    # Graphe non aléatoire coordonnées
+    def force_graph_coord(self, graphe):      
+        self.l_adj = graphe
+
     
     def change_coordonne(self, CENTER, RADIUS):
         for k in range(self.taille):
