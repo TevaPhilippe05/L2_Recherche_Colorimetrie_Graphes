@@ -9,13 +9,13 @@ p = 0.4 # Proba de création du graphe (plus elle est élevé, plus il y a d'arr
 N = 8
 G = Graphe(N)
 
-graphe = [[[540.0, 300.0, (255, 255, 0)], 2, 6, 8], [[469.7056274847714, 469.7056274847714, (255, 0, 0)], 1, 3, 8], [[300.0, 540.0, (255, 0, 0)], 2, 4, 5], 
+graphe = [[[540.0, 300.0, (255, 0, 0)], 2, 6, 8], [[469.7056274847714, 469.7056274847714, (255, 0, 0)], 1, 3, 8], [[300.0, 540.0, (255, 0, 0)], 2, 4, 5], 
           [[130.29437251522862, 469.7056274847714, (255, 0, 0)], 3, 8], [[60.0, 300.00000000000006, (255, 0, 0)], 3, 7], 
           [[130.29437251522856, 130.29437251522862, (255, 0, 0)], 1, 7, 8], [[299.99999999999994, 60.0, (255, 0, 0)], 5, 6], 
           [[469.70562748477136, 130.29437251522856, (255, 0, 0)], 1, 2, 4, 6]]
 
 G.force_graph_coord(graphe)
-
+G.couleur_aleatoire()
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
@@ -25,8 +25,6 @@ CENTER = (WIDTH // 2, HEIGHT // 2)
 RADIUS = int(WIDTH * RADIUS_RATIO)
 
 # G.rand_graph_coord(0.2, CENTER, RADIUS)
-
-print(G.l_adj)
 
 running = True
 while running:
