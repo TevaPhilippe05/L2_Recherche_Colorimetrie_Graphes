@@ -1,4 +1,5 @@
 import random
+import pygame
 import math
 
 class Graphe:
@@ -13,7 +14,7 @@ class Graphe:
             angle = 2 * math.pi * k / self.taille
             x = CENTER[0] + RADIUS * math.cos(angle)
             y = CENTER[1] + RADIUS * math.sin(angle)
-            self.l_adj[k].append([x,y])
+            self.l_adj[k].append([x,y, (255, 0, 0)])
 
         for i in range (self.taille):
             for j in range (i+1, self.taille):
@@ -27,10 +28,17 @@ class Graphe:
     def force_graph_coord(self, graphe):      
         self.l_adj = graphe
 
-    
+    # Changer les coordonnées en fonction de la taille de la page
     def change_coordonne(self, CENTER, RADIUS):
         for k in range(self.taille):
             angle = 2 * math.pi * k / self.taille
             x = CENTER[0] + RADIUS * math.cos(angle)
             y = CENTER[1] + RADIUS * math.sin(angle)
             self.l_adj[k][0][0] = x ; self.l_adj[k][0][1] = y
+
+    def draw_point(self, screen):
+        for k in range(self.taille):
+            x = self.l_adj[k][0][0]
+            y = self.l_adj[k][0][1]
+            color = self.l_adj[k][0][2]
+            pygame.draw.circle(screen, color, (int(x), int(y)), 8)
