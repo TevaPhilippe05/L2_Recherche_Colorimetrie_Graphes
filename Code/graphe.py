@@ -36,13 +36,19 @@ class Graphe:
             self.l_adj[k][0][0] = x ; self.l_adj[k][0][1] = y
 
 
-    def draw_point(self, screen):
+    def draw_point(self, screen, font):
         """Dessiner les points du graphes en prenant en compte leur couleur"""
         for k in range(self.taille):
             x = self.l_adj[k][0][0]
             y = self.l_adj[k][0][1]
             color = self.l_adj[k][0][2]
             pygame.draw.circle(screen, color, (int(x), int(y)), 14)
+            
+            # Ajout du numéro du noeud à sa droite
+            num = font.render(str(k + 1), True, (255, 255, 255))
+            num_x = int(x) + 25
+            num_y = int(y) - num.get_height() // 2
+            screen.blit(num, (num_x, num_y))
 
     def couleur_aleatoire(self):
         """Permet d'attribuer des couleurs aléatoires aux points du graphe"""
