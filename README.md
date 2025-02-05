@@ -1,5 +1,3 @@
 TODO : 
 
-1 - Numéroter les noeuds des graphes
-
-2 - Algo glouton de colorimétrie amélioré
+- Ajouter des méthodes pour manipuler le graphe et ou une interface.
