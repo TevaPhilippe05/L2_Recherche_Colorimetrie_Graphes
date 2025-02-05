@@ -5,7 +5,7 @@ import math
 class Graphe:
     def __init__(self, n):
         self.taille = n
-        self.l_adj = [[]for i in range(self.taille)]
+        self.l_adj = [ [] for i in range(self.taille)]
 
     def rand_graph_coord(self, p, CENTER, RADIUS):
         """Graphe aléatoire coordonnées"""
@@ -104,3 +104,52 @@ class Graphe:
                 if couleur_valide:
                     self.l_adj[elem - 1][0][2] = liste_couleur[ind_couleur]
                 ind_couleur += 1
+    
+    # Algorithme glouton 2
+    def glouton2(self, liste_couleur):
+        """Fait appel au premier algorithme glouton en lui soumettant un
+        ordre de priorité qui correspond à l'ordre inverse des plus petits
+        degrés calculés en enlevant les points déjà calculés"""
+
+        # Construction d'un tableau temporaire des lien
+        tab_lien = [[] for u in range(self.taille)]
+        for v in range(self.taille):
+            for w in range(1,len(self.l_adj[v])):
+                tab_lien[v].append(self.l_adj[v][w])
+
+        liste_termine = False
+        liste_point = []
+        while not liste_termine:
+            
+            # Obtention de la première valeur en vue d'une comparaison
+            cherche_donnee = True
+            i = 0
+            while cherche_donnee and i <= len(tab_lien):
+                if len(tab_lien[i]) != 0:
+                    minim = [tab_lien[i], len(tab_lien[i]), i + 1]
+                    cherche_donnee = False
+                i += 1
+
+            # Iteration jusqu'a obtenir le minimum de la liste
+            for y in range(0, self.taille):
+                if len(tab_lien[y]) < minim[1] and len(tab_lien[y]) != 0:
+                    minim = [tab_lien[y], len(tab_lien[y]), y + 1]
+            
+            # On enleve le points pour la suite du programme
+            liste_point.append(minim[2])
+            for z in range(minim[1]):
+                ind = minim[0][0] # Et pas minim[0][z] car la liste se réduit au fur et a mesure (puisque l'on supprime les éléments)
+                minim[0].remove(ind)
+                tab_lien[ind-1].remove(minim[2])
+                stock = ind
+
+            # Si le tableau des lien est vide on s'arrête
+            liste_termine = True
+            for x in range(self.taille):
+                if len(tab_lien[x]) > 0:
+                    liste_termine = False
+            if liste_termine:
+                liste_point.append(stock)
+
+        ordre_priorite = liste_point[::-1]
+        self.glouton1(liste_couleur, ordre_priorite)
