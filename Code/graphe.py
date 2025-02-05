@@ -62,6 +62,12 @@ class Graphe:
         """Permet d'attribuer une couleur à un point du graphe"""
         ind = point - 1
         self.l_adj[ind][0][2] = color
+
+    def voisin_point(self, point:int):
+        """Permet de connaitre les voisins d'un point"""
+        ind = point - 1
+        for e in range(1,len(self.l_adj[ind])):
+            print(self.l_adj[ind][e])
     
     def verification_voisin_point(self, point:int):
         """Vérifie que tout les voisins d'un points ont une couleur différente"""
@@ -75,7 +81,7 @@ class Graphe:
         return couleur_differente
 
     def verification_voisin_point_couleur(self, point:int, couleur):
-        """Vérifie que tout les voisins d'un points ont une couleur différente"""
+        """Vérifie que tout les voisins d'un points ont une couleur différente de la couleur donnée en paramètre"""
         ind = point - 1
         couleur_presente = False
         for q in range(1,len(self.l_adj[ind])):
