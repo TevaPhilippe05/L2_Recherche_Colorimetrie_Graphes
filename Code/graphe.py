@@ -13,7 +13,7 @@ class Graphe:
             angle = 2 * math.pi * k / self.taille
             x = CENTER[0] + RADIUS * math.cos(angle)
             y = CENTER[1] + RADIUS * math.sin(angle)
-            self.l_adj[k].append([x,y, (255, 0, 0)])
+            self.l_adj[k].append([x,y, (0,0,0)])
 
         for i in range (self.taille):
             for j in range (i+1, self.taille):
@@ -53,9 +53,9 @@ class Graphe:
     def couleur_aleatoire(self):
         """Permet d'attribuer des couleurs aléatoires aux points du graphe"""
         for o in range(self.taille):
-            c1 = random.randint(0, 256)
-            c2 = random.randint(0, 256)
-            c3 = random.randint(0, 256)
+            c1 = random.randint(0, 255)
+            c2 = random.randint(0, 255)
+            c3 = random.randint(0, 255)
             self.l_adj[o][0][2] = (c1, c2, c3)
 
     def donne_couleur(self, point:int, color):
@@ -82,7 +82,7 @@ class Graphe:
 
     def verification_voisin_point_couleur(self, point:int, couleur):
         """Vérifie que tout les voisins d'un points ont une couleur différente de la couleur donnée en paramètre"""
-        ind = point - 1
+        ind = point
         couleur_presente = False
         for q in range(1,len(self.l_adj[ind])):
             color_v = self.l_adj[self.l_adj[ind][q]-1][0][2] # Sélectionne la couleur du voisin q du point du graphe
@@ -100,19 +100,28 @@ class Graphe:
 
 
     # Algorithme glouton 1
-    def glouton1(self,liste_couleur, ordre_priorite):
+    def glouton1(self, ordre_priorite):
+        liste_couleur = []
+        for i in range(len(self.l_adj)):
+            t = i/(len(self.l_adj)-1)
+            if t < 0.5:
+                liste_couleur.append((((1 - 2*t)*255), 2*t*255, 0))
+            else:
+                liste_couleur.append((0, 2*(1-t)*255, (2*t-1)*255))
+
         """Attribue les couleurs du graphes avec un ordre de priorité"""
-        for elem in ordre_priorite:
+        self.l_adj[ordre_priorite[0]-1][0][2] = liste_couleur[0]
+        for i in range (1, len(ordre_priorite)):
             couleur_valide = False
             ind_couleur = 0
-            while not couleur_valide and ind_couleur < len(ordre_priorite):
-                couleur_valide = not self.verification_voisin_point_couleur(elem, liste_couleur[ind_couleur])
+            while not couleur_valide:
+                couleur_valide = not self.verification_voisin_point_couleur(ordre_priorite[i]-1, liste_couleur[ind_couleur])
                 if couleur_valide:
-                    self.l_adj[elem - 1][0][2] = liste_couleur[ind_couleur]
+                    self.l_adj[ordre_priorite[i]-1][0][2] = liste_couleur[ind_couleur]
                 ind_couleur += 1
     
     # Algorithme glouton 2
-    def glouton2(self, liste_couleur):
+    def glouton2(self):
         """Fait appel au premier algorithme glouton en lui soumettant un
         ordre de priorité qui correspond à l'ordre inverse des plus petits
         degrés calculés en enlevant les points déjà calculés"""
@@ -158,4 +167,4 @@ class Graphe:
                 liste_point.append(stock)
 
         ordre_priorite = liste_point[::-1]
-        self.glouton1(liste_couleur, ordre_priorite)
+        self.glouton1(ordre_priorite)
