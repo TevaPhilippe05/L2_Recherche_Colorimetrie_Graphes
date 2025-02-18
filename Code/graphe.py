@@ -6,9 +6,11 @@ class Graphe:
     def __init__(self, n):
         self.taille = n
         self.l_adj = [ [] for i in range(self.taille)]
+        self.type_graphe = None
 
-    def rand_graph_coord(self, p, CENTER, RADIUS):
+    def rand_graph_circulaire(self, p, CENTER, RADIUS):
         """Graphe aléatoire coordonnées"""
+        self.type_graphe = "circulaire"
         for k in range(self.taille):
             angle = 2 * math.pi * k / self.taille
             x = CENTER[0] + RADIUS * math.cos(angle)
@@ -23,9 +25,10 @@ class Graphe:
                     self.l_adj[i].append(j+1)
                     self.l_adj[j].append(i+1)
 
-    def force_graph_coord(self, graphe):
+    def force_graph_coord(self, graphe, type_graphe):
         """Graphe non aléatoire coordonnées"""
         self.l_adj = graphe
+        self.type_graphe = type_graphe
 
     def change_coordonne(self, CENTER, RADIUS):
         """Changer les coordonnées en fonction de la taille de la page"""

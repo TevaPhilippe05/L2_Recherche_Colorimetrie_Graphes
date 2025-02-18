@@ -17,6 +17,7 @@ font = pygame.font.Font(None, 36)
 CENTER = (WIDTH // 2, HEIGHT // 2)
 RADIUS = int(WIDTH * RADIUS_RATIO)
 
+### Imposer un graphe
 graphe = [[[540.0, 300.0, (0, 0, 0)], 2, 6, 8], [[469.7056274847714, 469.7056274847714, (0, 0, 0)], 1, 3, 8], [[300.0, 540.0, (0, 0, 0)], 2, 4, 5], 
           [[130.29437251522862, 469.7056274847714, (0, 0, 0)], 3, 8], [[60.0, 300.00000000000006, (0, 0, 0)], 3, 7], 
           [[130.29437251522856, 130.29437251522862, (0, 0, 0)], 1, 7, 8], [[299.99999999999994, 60.0, (0, 0, 0)], 5, 6], 
@@ -27,19 +28,22 @@ graphe = [[[540.0, 300.0, (0, 0, 0)], 2, 6, 8], [[469.7056274847714, 469.7056274
           [[130.29437251522856, 130.29437251522862, (0, 0, 0)], 1, 7], [[299.99999999999994, 60.0, (0, 0, 0)], 5, 6], 
           [[469.70562748477136, 130.29437251522856, (0, 0, 0)], 1, 4]]"""
 
-G.force_graph_coord(graphe)
-# G.rand_graph_coord(p, CENTER, RADIUS)
+G.force_graph_coord(graphe, "circulaire")
 
-ordre1 = [1,2,4,3,5,6,7,8]
-ordre2 = [2,1,5,3,4,8,6,7]
+### Graphe aléatoire
+# G.rand_graph_circulaire(p, CENTER, RADIUS)
+
+### Colorimétrie aléatoire
 # G.couleur_aleatoire()
-G.glouton1(ordre1)
+
+### Colorimétrie glouton 1
+# ordre1 = [1,2,4,3,5,6,7,8]
+# ordre2 = [2,1,5,3,4,8,6,7]
+# G.glouton1(ordre1)
 # G.glouton1(ordre2)
 
-# G.glouton2()
-
-# G.voisin_point(3)
-# G.donne_couleur(1, (0, 0, 255))
+### Colorimétrie glouton 2
+G.glouton2()
 
 running = True
 while running:
@@ -48,11 +52,12 @@ while running:
             running = False
 
         elif event.type == pygame.VIDEORESIZE: # Si on redimensionne la fenêtre
-            WIDTH, HEIGHT = event.w, event.h
+            if G.type == "circulaire":
+                WIDTH, HEIGHT = event.w, event.h
 
-            CENTER = (WIDTH // 2, HEIGHT // 2)
-            RADIUS = int(WIDTH * RADIUS_RATIO)
-            G.change_coordonne(CENTER, RADIUS)
+                CENTER = (WIDTH // 2, HEIGHT // 2)
+                RADIUS = int(WIDTH * RADIUS_RATIO)
+                G.change_coordonne(CENTER, RADIUS)
 
     screen.fill((35, 35, 35))
     
