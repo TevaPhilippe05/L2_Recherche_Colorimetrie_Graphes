@@ -6,16 +6,14 @@ class Graphe:
     def __init__(self, n):
         self.taille = n
         self.l_adj = [ [] for i in range(self.taille)]
-        self.type_graphe = None
 
-    def rand_graph_circulaire(self, p, CENTER, RADIUS):
-        """Graphe aléatoire coordonnées"""
-        self.type_graphe = "circulaire"
+    def graph_circulaire_aleatoire(self, p, CENTER, RADIUS):
+        """Graphe aléatoire circulaire coordonnées"""
         for k in range(self.taille):
             angle = 2 * math.pi * k / self.taille
             x = CENTER[0] + RADIUS * math.cos(angle)
             y = CENTER[1] + RADIUS * math.sin(angle)
-            self.l_adj[k].append([x,y, (0,0,0)])
+            self.l_adj[k].append([x,y, (0,0,0), x, y])
 
         for i in range (self.taille):
             for j in range (i+1, self.taille):
@@ -25,19 +23,37 @@ class Graphe:
                     self.l_adj[i].append(j+1)
                     self.l_adj[j].append(i+1)
 
-    def force_graph_coord(self, graphe, type_graphe):
+    def graph_non_circulaire_aleatoire(self, p, WIDTH, HEIGHT):
+        """Graphe aléatoire non circulaire coordonnées"""
+        for k in range(self.taille):
+            x = random.randint(30, WIDTH-30)
+            y = random.randint(30, HEIGHT-30)
+            # Ici on essaye d'eloigner les points pour qu'ils ne soit pas superposés
+            for j in range(10):
+                for i in range(0, k):
+                    while (self.l_adj[i][0][0] - x < 50 and self.l_adj[i][0][0] - x > -50) or (self.l_adj[i][0][1] - y < 50 and self.l_adj[i][0][1] - y > -50):
+                        x = random.randint(15, WIDTH-15)
+                        y = random.randint(15, HEIGHT-15)
+            self.l_adj[k].append([x, y, (0,0,0), x, y]) # Fois 2 car on a les nouvelles coordonnées et les coordonnées initiales 
+
+        for i in range (self.taille):
+            for j in range (i+1, self.taille):
+                x = random.random()
+
+                if x < p:
+                    self.l_adj[i].append(j+1)
+                    self.l_adj[j].append(i+1)
+
+    def force_graph_coord(self, graphe):
         """Graphe non aléatoire coordonnées"""
         self.l_adj = graphe
-        self.type_graphe = type_graphe
 
-    def change_coordonne(self, CENTER, RADIUS):
+    def change_coordonne(self, WIDTH, HEIGHT, new_WIDTH, new_HEIGHT):
         """Changer les coordonnées en fonction de la taille de la page"""
         for k in range(self.taille):
-            angle = 2 * math.pi * k / self.taille
-            x = CENTER[0] + RADIUS * math.cos(angle)
-            y = CENTER[1] + RADIUS * math.sin(angle)
+            x = self.l_adj[k][0][3]/WIDTH * new_WIDTH
+            y = self.l_adj[k][0][4]/HEIGHT * new_HEIGHT
             self.l_adj[k][0][0] = x ; self.l_adj[k][0][1] = y
-
 
     def draw_point(self, screen, font):
         """Dessiner les points du graphes en prenant en compte leur couleur"""

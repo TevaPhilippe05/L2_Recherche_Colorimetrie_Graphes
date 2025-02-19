@@ -3,35 +3,36 @@ import math
 
 from graphe import *
 
-WIDTH, HEIGHT = 600, 600
-RADIUS_RATIO = 0.4  # Rayon fait 40 % de la largeur de l'écran
-p = 0.6 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
+WIDTH, HEIGHT = 800, 800
+p = 0.5 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
 N = 8
 G = Graphe(N)
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
-pygame.display.set_caption("Graphes circulaire")
+pygame.display.set_caption("Graphes")
 font = pygame.font.Font(None, 36)
 
+### Imposer un graphe
+"""graphe = [[[720.0, 400.0, (0, 0, 0), 720.0, 400.0], 3, 4, 5], [[626.3, 626.3, (0, 0, 0), 626.3, 626.3], 5], [[400.0, 720.0, (0, 0, 0), 400.0, 720.0], 1, 4, 5, 6, 7], 
+          [[173.7, 626.3, (0, 0, 0), 173.7, 626.3], 1, 3, 7, 8], [[80.0, 400.0, (0, 0, 0), 80.0, 400.0], 1, 2, 3, 6], [[173.7, 173.7, (0, 0, 0), 173.7, 173.7], 3, 5, 7, 8], 
+          [[400.0, 80.0, (0, 0, 0), 400.0, 80.0], 3, 4, 6], [[626.3, 173.7, (0, 0, 0), 626.3, 173.7], 4, 6]]"""
+
+graphe = [[[720.0, 400.0, (0, 0, 0), 720.0, 400.0], 2, 3, 4, 5, 6, 8], [[626.3, 626.3, (0, 0, 0), 626.3, 626.3], 1, 3, 4, 5, 6, 7, 8], 
+             [[400.0, 720.0, (0, 0, 0), 400.0, 720.0], 1, 2, 4, 5, 7, 8], [[173.7, 626.3, (0, 0, 0), 173.7, 626.3], 1, 2, 3, 5, 6, 7, 8], 
+             [[80.0, 400.0, (0, 0, 0), 80.0, 400.0], 1, 2, 3, 4, 6, 7, 8], [[173.7, 173.7, (0, 0, 0), 173.7, 173.7], 1, 2, 4, 5],
+             [[400.0, 80.0, (0, 0, 0), 400.0, 80.0], 2, 3, 4, 5, 8], [[626.3, 173.7, (0, 0, 0), 626.3, 173.7], 1, 2, 3, 4, 5, 7]]
+
+G.force_graph_coord(graphe)
+
+### Graphe aléatoire circulaire
+RADIUS_RATIO = 0.4  # Rayon fait 40 % de la largeur de l'écran
 CENTER = (WIDTH // 2, HEIGHT // 2)
 RADIUS = int(WIDTH * RADIUS_RATIO)
+# G.graph_circulaire_aleatoire(p, CENTER, RADIUS)
 
-### Imposer un graphe
-graphe = [[[540.0, 300.0, (0, 0, 0)], 2, 6, 8], [[469.7056274847714, 469.7056274847714, (0, 0, 0)], 1, 3, 8], [[300.0, 540.0, (0, 0, 0)], 2, 4, 5], 
-          [[130.29437251522862, 469.7056274847714, (0, 0, 0)], 3, 8], [[60.0, 300.00000000000006, (0, 0, 0)], 3, 7], 
-          [[130.29437251522856, 130.29437251522862, (0, 0, 0)], 1, 7, 8], [[299.99999999999994, 60.0, (0, 0, 0)], 5, 6], 
-          [[469.70562748477136, 130.29437251522856, (0, 0, 0)], 1, 2, 4, 6]]
-
-"""graphe = [[[540.0, 300.0, (0, 0, 0)], 2, 6, 8], [[469.7056274847714, 469.7056274847714, (0, 0, 0)], 1, 3], [[300.0, 540.0, (0, 0, 0)], 2, 4, 5], 
-          [[130.29437251522862, 469.7056274847714, (0, 0, 0)], 3, 8], [[60.0, 300.00000000000006, (0, 0, 0)], 3, 7], 
-          [[130.29437251522856, 130.29437251522862, (0, 0, 0)], 1, 7], [[299.99999999999994, 60.0, (0, 0, 0)], 5, 6], 
-          [[469.70562748477136, 130.29437251522856, (0, 0, 0)], 1, 4]]"""
-
-G.force_graph_coord(graphe, "circulaire")
-
-### Graphe aléatoire
-# G.rand_graph_circulaire(p, CENTER, RADIUS)
+### Graphe aléatoire non circulaire
+# G.graph_non_circulaire_aleatoire(p, WIDTH, HEIGHT)
 
 ### Colorimétrie aléatoire
 # G.couleur_aleatoire()
@@ -44,7 +45,7 @@ G.force_graph_coord(graphe, "circulaire")
 
 ### Colorimétrie glouton 2
 G.glouton2()
-
+selected_point = None
 running = True
 while running:
     for event in pygame.event.get():
@@ -52,12 +53,30 @@ while running:
             running = False
 
         elif event.type == pygame.VIDEORESIZE: # Si on redimensionne la fenêtre
-            if G.type == "circulaire":
-                WIDTH, HEIGHT = event.w, event.h
 
-                CENTER = (WIDTH // 2, HEIGHT // 2)
-                RADIUS = int(WIDTH * RADIUS_RATIO)
-                G.change_coordonne(CENTER, RADIUS)
+                new_WIDTH, new_HEIGHT = event.w, event.h
+                G.change_coordonne(WIDTH, HEIGHT, new_WIDTH, new_HEIGHT)
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = event.pos
+            for i in range(G.taille):
+                x, y = G.l_adj[i][0][:2]
+                
+                if math.hypot(mouse_x - x, mouse_y - y) < 14:
+                    selected_point = i
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+            selected_point = None
+
+        elif event.type == pygame.MOUSEMOTION and selected_point is not None:  # Déplacement
+            new_WIDTH, new_HEIGHT = screen.get_width(), screen.get_height()
+            mouse_x, mouse_y = event.pos
+            G.l_adj[selected_point][0][0] = mouse_x
+            G.l_adj[selected_point][0][1] = mouse_y
+            
+            G.l_adj[selected_point][0][3] = mouse_x / new_WIDTH * WIDTH
+            G.l_adj[selected_point][0][4] = mouse_y / new_HEIGHT * HEIGHT
+
 
     screen.fill((35, 35, 35))
     
@@ -80,7 +99,7 @@ while running:
                     deja_trace_b = True
 
             if not deja_trace_b:
-                pygame.draw.line(screen, (255,255,255), (x_1, y_1), (x_2, y_2), 5)
+                pygame.draw.line(screen, (50, 50,170), (x_1, y_1), (x_2, y_2), 5)
                 deja_trace.append([ind_point_1, ind_point_2])
 
     # Dessiner les points
