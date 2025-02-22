@@ -4,8 +4,8 @@ import math
 from graphe import *
 
 WIDTH, HEIGHT = 800, 800
-p = 0.5 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
-N = 8
+p = 0.9 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
+N = 100
 G = Graphe(N)
 
 pygame.init()
@@ -23,13 +23,13 @@ graphe = [[[720.0, 400.0, (0, 0, 0), 720.0, 400.0], 2, 3, 4, 5, 6, 8], [[626.3, 
              [[80.0, 400.0, (0, 0, 0), 80.0, 400.0], 1, 2, 3, 4, 6, 7, 8], [[173.7, 173.7, (0, 0, 0), 173.7, 173.7], 1, 2, 4, 5],
              [[400.0, 80.0, (0, 0, 0), 400.0, 80.0], 2, 3, 4, 5, 8], [[626.3, 173.7, (0, 0, 0), 626.3, 173.7], 1, 2, 3, 4, 5, 7]]
 
-G.force_graph_coord(graphe)
+# G.force_graph_coord(graphe)
 
 ### Graphe aléatoire circulaire
 RADIUS_RATIO = 0.4  # Rayon fait 40 % de la largeur de l'écran
 CENTER = (WIDTH // 2, HEIGHT // 2)
 RADIUS = int(WIDTH * RADIUS_RATIO)
-# G.graph_circulaire_aleatoire(p, CENTER, RADIUS)
+G.graph_circulaire_aleatoire(p, CENTER, RADIUS)
 
 ### Graphe aléatoire non circulaire
 # G.graph_non_circulaire_aleatoire(p, WIDTH, HEIGHT)
@@ -44,18 +44,20 @@ RADIUS = int(WIDTH * RADIUS_RATIO)
 # G.glouton1(ordre2)
 
 ### Colorimétrie glouton 2
-G.glouton2()
+# G.glouton2()
+
+G.compare_graphe1_graphe2()
+
 selected_point = None
-running = True
+running = False
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
         elif event.type == pygame.VIDEORESIZE: # Si on redimensionne la fenêtre
-
-                new_WIDTH, new_HEIGHT = event.w, event.h
-                G.change_coordonne(WIDTH, HEIGHT, new_WIDTH, new_HEIGHT)
+            new_WIDTH, new_HEIGHT = event.w, event.h
+            G.change_coordonne(WIDTH, HEIGHT, new_WIDTH, new_HEIGHT)
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = event.pos

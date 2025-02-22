@@ -18,7 +18,6 @@ class Graphe:
         for i in range (self.taille):
             for j in range (i+1, self.taille):
                 x = random.random()
-
                 if x < p:
                     self.l_adj[i].append(j+1)
                     self.l_adj[j].append(i+1)
@@ -187,3 +186,35 @@ class Graphe:
 
         ordre_priorite = liste_point[::-1]
         self.glouton1(ordre_priorite)
+
+    def compte_couleur_graphe(self):
+        couleurs = []
+
+        for noeud in self.l_adj:
+            couleur = noeud[0][2]
+            
+            est_deja_presente = False
+            for c in couleurs:
+                if c == couleur:
+                    est_deja_presente = True
+                    break
+
+            if not est_deja_presente:
+                couleurs.append(couleur)
+
+        return len(couleurs)
+
+
+    def compare_graphe1_graphe2(self):
+        ordre1 = list(range(1, self.taille + 1))
+        random.shuffle(ordre1)
+        ordre2 = list(range(1, self.taille + 1))
+
+        self.glouton1(ordre1)
+        print(self.compte_couleur_graphe())
+        self.glouton1(ordre2)
+        print(self.compte_couleur_graphe())
+        # print(self.l_adj, "\n")
+        self.glouton2()
+        print(self.compte_couleur_graphe())
+        # print(self.l_adj)
