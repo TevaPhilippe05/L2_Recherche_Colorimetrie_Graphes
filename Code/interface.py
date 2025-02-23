@@ -4,14 +4,9 @@ import math
 from graphe import *
 
 WIDTH, HEIGHT = 800, 800
-p = 0.9 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
-N = 100
+p = 0.4 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
+N = 50
 G = Graphe(N)
-
-pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
-pygame.display.set_caption("Graphes")
-font = pygame.font.Font(None, 36)
 
 ### Imposer un graphe
 """graphe = [[[720.0, 400.0, (0, 0, 0), 720.0, 400.0], 3, 4, 5], [[626.3, 626.3, (0, 0, 0), 626.3, 626.3], 5], [[400.0, 720.0, (0, 0, 0), 400.0, 720.0], 1, 4, 5, 6, 7], 
@@ -29,7 +24,7 @@ graphe = [[[720.0, 400.0, (0, 0, 0), 720.0, 400.0], 2, 3, 4, 5, 6, 8], [[626.3, 
 RADIUS_RATIO = 0.4  # Rayon fait 40 % de la largeur de l'écran
 CENTER = (WIDTH // 2, HEIGHT // 2)
 RADIUS = int(WIDTH * RADIUS_RATIO)
-G.graph_circulaire_aleatoire(p, CENTER, RADIUS)
+# G.graph_circulaire_aleatoire(p, CENTER, RADIUS)
 
 ### Graphe aléatoire non circulaire
 # G.graph_non_circulaire_aleatoire(p, WIDTH, HEIGHT)
@@ -46,9 +41,17 @@ G.graph_circulaire_aleatoire(p, CENTER, RADIUS)
 ### Colorimétrie glouton 2
 # G.glouton2()
 
-G.compare_graphe1_graphe2()
+# G.compare_graphe1_graphe2()
+G.stat_compare_graphe1_graphe2_sur_graph_non_circulaire_aleatoire(100, p, WIDTH, HEIGHT)
+G.stat_compare_graphe1_graphe2_sur_graph_circulaire_aleatoire(100, p, CENTER, RADIUS)
 
+"""
+pygame.init()
+screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
+pygame.display.set_caption("Graphes")
+font = pygame.font.Font(None, 36)
 selected_point = None
+"""
 running = False
 while running:
     for event in pygame.event.get():
