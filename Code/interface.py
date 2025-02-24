@@ -29,6 +29,9 @@ RADIUS = int(WIDTH * RADIUS_RATIO)
 ### Graphe aléatoire non circulaire
 # G.graph_non_circulaire_aleatoire(p, WIDTH, HEIGHT)
 
+### Graphe planaire aléatoire
+# G.graph_planaire_aleatoire(p, WIDTH, HEIGHT)
+
 ### Colorimétrie aléatoire
 # G.couleur_aleatoire()
 
@@ -42,8 +45,9 @@ RADIUS = int(WIDTH * RADIUS_RATIO)
 # G.glouton2()
 
 # G.compare_graphe1_graphe2()
-G.stat_compare_graphe1_graphe2_sur_graph_non_circulaire_aleatoire(100, p, WIDTH, HEIGHT)
-G.stat_compare_graphe1_graphe2_sur_graph_circulaire_aleatoire(100, p, CENTER, RADIUS)
+# G.stat_compare_graphe1_graphe2_sur_graph_non_circulaire_aleatoire(100, p, WIDTH, HEIGHT)
+# G.stat_compare_graphe1_graphe2_sur_graph_circulaire_aleatoire(100, p, CENTER, RADIUS)
+G.stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(100, p, WIDTH, HEIGHT)
 
 """
 pygame.init()

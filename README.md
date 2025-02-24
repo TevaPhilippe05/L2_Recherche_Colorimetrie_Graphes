@@ -1,3 +1,3 @@
 TODO : 
 
-- Ajouter des méthodes pour manipuler le graphe et ou une interface.
+- Implémenter le 3ème algorithme de colorimétrie efficace sur des graphes planaires"

@@ -24,24 +24,62 @@ class Graphe:
 
     def graph_non_circulaire_aleatoire(self, p, WIDTH, HEIGHT):
         """Graphe aléatoire non circulaire coordonnées"""
+        self.points_aleatoires(WIDTH, HEIGHT)
+
+        for i in range (self.taille):
+            for j in range (i+1, self.taille):
+                if random.random() < p:
+                    self.l_adj[i].append(j+1)
+                    self.l_adj[j].append(i+1)
+    
+    def graph_planaire_aleatoire(self, p, WIDTH, HEIGHT):
+        """Génère un graphe planaire"""
+        self.points_aleatoires(WIDTH, HEIGHT)
+
+        for i in range(self.taille):
+            for j in range(i + 1, self.taille):
+                if random.random() < p and self.peut_ajouter_arete(i, j): # On va aussi vérifier qu'on peut placer l'arrête
+                    self.l_adj[i].append(j + 1)
+                    self.l_adj[j].append(i + 1)
+
+    def points_aleatoires(self, WIDTH, HEIGHT):
+        """Placement aléatoire des points"""
         for k in range(self.taille):
-            x = random.randint(30, WIDTH-30)
-            y = random.randint(30, HEIGHT-30)
+            x = random.randint(45, WIDTH - 45)
+            y = random.randint(45, HEIGHT - 45)
             # Ici on essaye d'eloigner les points pour qu'ils ne soit pas superposés
             for j in range(10):
                 for i in range(0, k):
                     while (self.l_adj[i][0][0] - x < 50 and self.l_adj[i][0][0] - x > -50) or (self.l_adj[i][0][1] - y < 50 and self.l_adj[i][0][1] - y > -50):
-                        x = random.randint(15, WIDTH-15)
-                        y = random.randint(15, HEIGHT-15)
+                        x = random.randint(45, WIDTH - 45)
+                        y = random.randint(45, HEIGHT - 45)
             self.l_adj[k].append([x, y, (0,0,0), x, y]) # Fois 2 car on a les nouvelles coordonnées et les coordonnées initiales 
 
-        for i in range (self.taille):
-            for j in range (i+1, self.taille):
-                x = random.random()
+    def peut_ajouter_arete(self, i, j):
+        """Vérifie si l'arête (i, j) ne coupe aucune autre"""
+        A = (self.l_adj[i][0][0], self.l_adj[i][0][1]) # coord du premier point
+        B = (self.l_adj[j][0][0], self.l_adj[j][0][1]) # coord du deuxieme point
 
-                if x < p:
-                    self.l_adj[i].append(j+1)
-                    self.l_adj[j].append(i+1)
+        for u in range(self.taille):
+            for v in self.l_adj[u][1:]:  # Vérifie toutes les arêtes déjà placées
+                C = (self.l_adj[u][0][0], self.l_adj[u][0][1])
+                D = (self.l_adj[v - 1][0][0], self.l_adj[v - 1][0][1])
+                    
+                if (A != C and A != D and B != C and B != D) and self.segments_se_croisent(A, B, C, D): # Si les sommet en ont un en commun ils se croisent pas
+                    return False
+        return True
+
+    def segments_se_croisent(self, A, B, C, D):
+        """Vérifie si les segments AB et CD se croisent
+        J'utilise le produit vectoriel pour vérifier que A et B sont de part et d'autres de CD
+        et que C et D sont de part et d'autre de AB.
+        """
+        val1 = (B[1] - A[1]) * (C[0] - B[0]) - (B[0] - A[0]) * (C[1] - B[1])
+        val2 = (B[1] - A[1]) * (D[0] - B[0]) - (B[0] - A[0]) * (D[1] - B[1])
+        val3 = (D[1] - C[1]) * (A[0] - D[0]) - (D[0] - C[0]) * (A[1] - D[1])
+        val4 = (D[1] - C[1]) * (B[0] - D[0]) - (D[0] - C[0]) * (B[1] - D[1])
+        
+        return (val1 * val2 < 0 and val3 * val4 < 0)
 
     def force_graph_coord(self, graphe):
         """Graphe non aléatoire coordonnées"""
@@ -270,6 +308,103 @@ class Graphe:
         tab = [0, 0, 0]
         for i in range(m):
             self.graph_non_circulaire_aleatoire(p, CENTER, RADIUS)
+            self.glouton1(ordre1)
+            g1_ord1 = self.compte_couleur_graphe()
+            self.glouton1(ordre2)
+            g1_ord2 = self.compte_couleur_graphe()
+            self.glouton2()
+            g2 = self.compte_couleur_graphe()
+            if g1_ord1 < g1_ord2:
+                if g1_ord1 < g2:
+                    tab[0] += 1
+                elif g1_ord1 == g2:
+                    tab[0] += 1
+                    tab[2] += 1
+                else:
+                    tab[2] += 1
+            elif g1_ord1 == g1_ord2:
+                if g1_ord1 < g2:
+                    tab[0] += 1
+                    tab[1] += 1
+                elif g1_ord1 == g2:
+                    tab[0] += 1
+                    tab[1] += 1
+                    tab[2] += 1
+                else:
+                    tab[2] += 1
+            else:
+                if g1_ord1 <= g2:
+                    tab[1] += 1
+                else:
+                    if g1_ord2 < g2:
+                        tab[1] += 1
+                    elif g1_ord2 == g2:
+                        tab[1] += 1
+                        tab[2] += 1
+                    else:
+                        tab[2] += 1
+            self.l_adj = [[] for i in range(self.taille)]
+
+        print("Sur un graphe non circulaire aléatoire de " + str(self.taille) + " points :\n\nL'algo glouton 1 avec un ordre allant de 1 à " + str(self.taille) + " renvoie dans " + str(tab[0]) + " % " + 
+        "des cas le moins de couleurs.\nL'algo glouton 1 avec un ordre aléatoire " + " renvoie dans " + str(tab[1]) + " % " + "des cas le moins de couleurs.\nL'algo glouton 2 renvoie dans " + 
+        str(tab[2]) + " % " + "des cas le moins de couleurs.")
+
+
+    def stat_compare_graphe1_graphe2_sur_graph_circulaire_aleatoire(self, m, p, WIDTH, HEIGHT):
+        ordre1 = list(range(1, self.taille + 1))
+        ordre2 = list(range(1, self.taille + 1))
+        random.shuffle(ordre2)
+        tab = [0, 0, 0]
+        for i in range(m):
+            self.graph_circulaire_aleatoire(p, WIDTH, HEIGHT)
+            self.glouton1(ordre1)
+            g1_ord1 = self.compte_couleur_graphe()
+            self.glouton1(ordre2)
+            g1_ord2 = self.compte_couleur_graphe()
+            self.glouton2()
+            g2 = self.compte_couleur_graphe()
+            if g1_ord1 < g1_ord2:
+                if g1_ord1 < g2:
+                    tab[0] += 1
+                elif g1_ord1 == g2:
+                    tab[0] += 1
+                    tab[2] += 1
+                else:
+                    tab[2] += 1
+            elif g1_ord1 == g1_ord2:
+                if g1_ord1 < g2:
+                    tab[0] += 1
+                    tab[1] += 1
+                elif g1_ord1 == g2:
+                    tab[0] += 1
+                    tab[1] += 1
+                    tab[2] += 1
+                else:
+                    tab[2] += 1
+            else:
+                if g1_ord1 <= g2:
+                    tab[1] += 1
+                else:
+                    if g1_ord2 < g2:
+                        tab[1] += 1
+                    elif g1_ord2 == g2:
+                        tab[1] += 1
+                        tab[2] += 1
+                    else:
+                        tab[2] += 1
+            self.l_adj = [[] for i in range(self.taille)]
+
+        print("Sur un graphe circulaire aléatoire de " + str(self.taille) + " points :\n\nL'algo glouton 1 avec un ordre allant de 1 à " + str(self.taille) + " renvoie dans " + str(tab[0]) + " % " + 
+        "des cas le moins de couleurs.\nL'algo glouton 1 avec un ordre aléatoire " + " renvoie dans " + str(tab[1]) + " % " + "des cas le moins de couleurs.\nL'algo glouton 2 renvoie dans " + 
+        str(tab[2]) + " % " + "des cas le moins de couleurs.")
+    
+    def stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(self, m, p, WIDTH, HEIGHT):
+        ordre1 = list(range(1, self.taille + 1))
+        ordre2 = list(range(1, self.taille + 1))
+        random.shuffle(ordre2)
+        tab = [0, 0, 0]
+        for i in range(m):
+            self.graph_planaire_aleatoire(p, WIDTH, HEIGHT)
             self.glouton1(ordre1)
             g1_ord1 = self.compte_couleur_graphe()
             self.glouton1(ordre2)
