@@ -126,11 +126,20 @@ class Graphe:
 
     def couleur_aleatoire(self):
         """Permet d'attribuer des couleurs aléatoires aux points du graphe"""
+        max = 0
+        un_sur_deux = True # Pour maximiser le nombre de couleurs
         for o in range(self.taille):
-            c1 = random.randint(0, 255)
-            c2 = random.randint(0, 255)
-            c3 = random.randint(0, 255)
-            self.l_adj[o][0][2] = (c1, c2, c3)
+            if un_sur_deux:
+                c = max
+                un_sur_deux = False
+            else:
+                c = random.randint(0, max)
+                un_sur_deux = True
+
+            if c == max :
+                max += 1
+            self.l_adj[o][0][2] = c
+        print(self.l_adj)
 
     def donne_couleur(self, point:int, color):
         """Permet d'attribuer une couleur à un point du graphe"""

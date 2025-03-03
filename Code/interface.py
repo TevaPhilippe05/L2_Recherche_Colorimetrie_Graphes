@@ -5,7 +5,7 @@ from graphe import *
 
 WIDTH, HEIGHT = 800, 800
 p = 0.5 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
-N = 50
+N = 40
 G = Graphe(N)
 
 ### Imposer un graphe
@@ -33,7 +33,7 @@ RADIUS = int(WIDTH * RADIUS_RATIO)
 G.graph_planaire_aleatoire(p, WIDTH, HEIGHT)
 
 ### Colorimétrie aléatoire
-# G.couleur_aleatoire()
+G.couleur_aleatoire()
 
 ### Colorimétrie glouton 1
 ordre1 = list(range(1, G.taille + 1))
@@ -43,7 +43,7 @@ random.shuffle(ordre2)
 # G.glouton1(ordre2)
 
 ### Colorimétrie glouton 2
-G.glouton2()
+# G.glouton2()
 
 # print(G.compte_couleur_graphe())
 # G.compare_graphe1_graphe2()
