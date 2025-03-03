@@ -4,19 +4,19 @@ import math
 from graphe import *
 
 WIDTH, HEIGHT = 800, 800
-p = 0.4 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
-N = 50
+p = 0.5 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
+N = 10
 G = Graphe(N)
 
 ### Imposer un graphe
-"""graphe = [[[720.0, 400.0, (0, 0, 0), 720.0, 400.0], 3, 4, 5], [[626.3, 626.3, (0, 0, 0), 626.3, 626.3], 5], [[400.0, 720.0, (0, 0, 0), 400.0, 720.0], 1, 4, 5, 6, 7], 
-          [[173.7, 626.3, (0, 0, 0), 173.7, 626.3], 1, 3, 7, 8], [[80.0, 400.0, (0, 0, 0), 80.0, 400.0], 1, 2, 3, 6], [[173.7, 173.7, (0, 0, 0), 173.7, 173.7], 3, 5, 7, 8], 
-          [[400.0, 80.0, (0, 0, 0), 400.0, 80.0], 3, 4, 6], [[626.3, 173.7, (0, 0, 0), 626.3, 173.7], 4, 6]]"""
+"""graphe = [[[720.0, 400.0, -1, 720.0, 400.0], 3, 4, 5], [[626.3, 626.3, -1, 626.3, 626.3], 5], [[400.0, 720.0, -1, 400.0, 720.0], 1, 4, 5, 6, 7], 
+          [[173.7, 626.3, -1, 173.7, 626.3], 1, 3, 7, 8], [[80.0, 400.0, -1, 80.0, 400.0], 1, 2, 3, 6], [[173.7, 173.7, -1, 173.7, 173.7], 3, 5, 7, 8], 
+          [[400.0, 80.0, -1, 400.0, 80.0], 3, 4, 6], [[626.3, 173.7, -1, 626.3, 173.7], 4, 6]]"""
 
-graphe = [[[720.0, 400.0, (0, 0, 0), 720.0, 400.0], 2, 3, 4, 5, 6, 8], [[626.3, 626.3, (0, 0, 0), 626.3, 626.3], 1, 3, 4, 5, 6, 7, 8], 
-             [[400.0, 720.0, (0, 0, 0), 400.0, 720.0], 1, 2, 4, 5, 7, 8], [[173.7, 626.3, (0, 0, 0), 173.7, 626.3], 1, 2, 3, 5, 6, 7, 8], 
-             [[80.0, 400.0, (0, 0, 0), 80.0, 400.0], 1, 2, 3, 4, 6, 7, 8], [[173.7, 173.7, (0, 0, 0), 173.7, 173.7], 1, 2, 4, 5],
-             [[400.0, 80.0, (0, 0, 0), 400.0, 80.0], 2, 3, 4, 5, 8], [[626.3, 173.7, (0, 0, 0), 626.3, 173.7], 1, 2, 3, 4, 5, 7]]
+graphe = [[[720.0, 400.0, -1, 720.0, 400.0], 2, 3, 4, 5, 6, 8], [[626.3, 626.3, -1, 626.3, 626.3], 1, 3, 4, 5, 6, 7, 8], 
+             [[400.0, 720.0, -1, 400.0, 720.0], 1, 2, 4, 5, 7, 8], [[173.7, 626.3, -1, 173.7, 626.3], 1, 2, 3, 5, 6, 7, 8], 
+             [[80.0, 400.0, -1, 80.0, 400.0], 1, 2, 3, 4, 6, 7, 8], [[173.7, 173.7, -1, 173.7, 173.7], 1, 2, 4, 5],
+             [[400.0, 80.0, -1, 400.0, 80.0], 2, 3, 4, 5, 8], [[626.3, 173.7, -1, 626.3, 173.7], 1, 2, 3, 4, 5, 7]]
 
 # G.force_graph_coord(graphe)
 
@@ -30,33 +30,35 @@ RADIUS = int(WIDTH * RADIUS_RATIO)
 # G.graph_non_circulaire_aleatoire(p, WIDTH, HEIGHT)
 
 ### Graphe planaire aléatoire
-# G.graph_planaire_aleatoire(p, WIDTH, HEIGHT)
+G.graph_planaire_aleatoire(p, WIDTH, HEIGHT)
 
 ### Colorimétrie aléatoire
 # G.couleur_aleatoire()
 
 ### Colorimétrie glouton 1
-# ordre1 = [1,2,4,3,5,6,7,8]
-# ordre2 = [2,1,5,3,4,8,6,7]
+ordre1 = list(range(1, G.taille + 1))
+ordre2 = list(range(1, G.taille + 1))
+random.shuffle(ordre2)
 # G.glouton1(ordre1)
 # G.glouton1(ordre2)
 
 ### Colorimétrie glouton 2
-# G.glouton2()
+G.glouton2()
 
+# print(G.compte_couleur_graphe())
 # G.compare_graphe1_graphe2()
 # G.stat_compare_graphe1_graphe2_sur_graph_non_circulaire_aleatoire(100, p, WIDTH, HEIGHT)
 # G.stat_compare_graphe1_graphe2_sur_graph_circulaire_aleatoire(100, p, CENTER, RADIUS)
-G.stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(100, p, WIDTH, HEIGHT)
+# G.stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(100, p, WIDTH, HEIGHT)
 
-"""
+
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Graphes")
 font = pygame.font.Font(None, 36)
 selected_point = None
-"""
-running = False
+
+running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

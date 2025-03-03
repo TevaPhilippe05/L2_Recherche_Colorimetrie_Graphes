@@ -13,7 +13,7 @@ class Graphe:
             angle = 2 * math.pi * k / self.taille
             x = CENTER[0] + RADIUS * math.cos(angle)
             y = CENTER[1] + RADIUS * math.sin(angle)
-            self.l_adj[k].append([x,y, (0,0,0), x, y])
+            self.l_adj[k].append([x,y, -1, x, y])
 
         for i in range (self.taille):
             for j in range (i+1, self.taille):
@@ -35,12 +35,16 @@ class Graphe:
     def graph_planaire_aleatoire(self, p, WIDTH, HEIGHT):
         """Génère un graphe planaire"""
         self.points_aleatoires(WIDTH, HEIGHT)
-
-        for i in range(self.taille):
+        l_arrete = []
+        for i in range (self.taille - 1):
             for j in range(i + 1, self.taille):
-                if random.random() < p and self.peut_ajouter_arete(i, j): # On va aussi vérifier qu'on peut placer l'arrête
-                    self.l_adj[i].append(j + 1)
-                    self.l_adj[j].append(i + 1)
+                l_arrete.append((i,j))
+        random.shuffle(l_arrete)
+
+        for (i,j) in l_arrete:
+            if random.random() < p and self.peut_ajouter_arete(i, j): # On va aussi vérifier qu'on peut placer l'arrête
+                self.l_adj[i].append(j + 1)
+                self.l_adj[j].append(i + 1)
 
     def points_aleatoires(self, WIDTH, HEIGHT):
         """Placement aléatoire des points"""
@@ -53,7 +57,7 @@ class Graphe:
                     while (self.l_adj[i][0][0] - x < 50 and self.l_adj[i][0][0] - x > -50) or (self.l_adj[i][0][1] - y < 50 and self.l_adj[i][0][1] - y > -50):
                         x = random.randint(45, WIDTH - 45)
                         y = random.randint(45, HEIGHT - 45)
-            self.l_adj[k].append([x, y, (0,0,0), x, y]) # Fois 2 car on a les nouvelles coordonnées et les coordonnées initiales 
+            self.l_adj[k].append([x, y, -1, x, y]) # Fois 2 car on a les nouvelles coordonnées et les coordonnées initiales 
 
     def peut_ajouter_arete(self, i, j):
         """Vérifie si l'arête (i, j) ne coupe aucune autre"""
@@ -94,10 +98,24 @@ class Graphe:
 
     def draw_point(self, screen, font):
         """Dessiner les points du graphes en prenant en compte leur couleur"""
+        nb_couleur = []
+        liste_couleur = []
+        for i in range(len(self.l_adj)):
+            if not self.l_adj[i][0][2] in nb_couleur:
+                nb_couleur.append(self.l_adj[i][0][2])
+
+        for i in range(len(nb_couleur)):
+            t = i/(len(nb_couleur))
+            if t < 0.5:
+                liste_couleur.append((((1 - 2*t)*255), 2*t*255, 0))
+            else:
+                liste_couleur.append((0, 2*(1-t)*255, (2*t-1)*255))
+
         for k in range(self.taille):
             x = self.l_adj[k][0][0]
             y = self.l_adj[k][0][1]
-            color = self.l_adj[k][0][2]
+            
+            color = liste_couleur[self.l_adj[k][0][2]]
             pygame.draw.circle(screen, color, (int(x), int(y)), 14)
             
             # Ajout du numéro du noeud à sa droite
@@ -157,23 +175,15 @@ class Graphe:
 
     # Algorithme glouton 1
     def glouton1(self, ordre_priorite):
-        liste_couleur = []
-        for i in range(len(self.l_adj)):
-            t = i/(len(self.l_adj)-1)
-            if t < 0.5:
-                liste_couleur.append((((1 - 2*t)*255), 2*t*255, 0))
-            else:
-                liste_couleur.append((0, 2*(1-t)*255, (2*t-1)*255))
-
         """Attribue les couleurs du graphes avec un ordre de priorité"""
-        self.l_adj[ordre_priorite[0]-1][0][2] = liste_couleur[0]
+        self.l_adj[ordre_priorite[0]-1][0][2] = 0
         for i in range (1, len(ordre_priorite)):
             couleur_valide = False
             ind_couleur = 0
             while not couleur_valide:
-                couleur_valide = not self.verification_voisin_point_couleur(ordre_priorite[i]-1, liste_couleur[ind_couleur])
+                couleur_valide = not self.verification_voisin_point_couleur(ordre_priorite[i]-1, ind_couleur)
                 if couleur_valide:
-                    self.l_adj[ordre_priorite[i]-1][0][2] = liste_couleur[ind_couleur]
+                    self.l_adj[ordre_priorite[i]-1][0][2] = ind_couleur
                 ind_couleur += 1
     
     # Algorithme glouton 2
@@ -200,6 +210,7 @@ class Graphe:
                     minim = [tab_lien[i], len(tab_lien[i]), i + 1]
                     cherche_donnee = False
                 i += 1
+            
 
             # Iteration jusqu'a obtenir le minimum de la liste
             for y in range(0, self.taille):
@@ -213,6 +224,7 @@ class Graphe:
                 minim[0].remove(ind)
                 tab_lien[ind-1].remove(minim[2])
                 stock = ind
+            print(tab_lien)
 
             # Si le tableau des lien est vide on s'arrête
             liste_termine = True
@@ -223,6 +235,7 @@ class Graphe:
                 liste_point.append(stock)
 
         ordre_priorite = liste_point[::-1]
+        print(ordre_priorite)
         self.glouton1(ordre_priorite)
 
     def compte_couleur_graphe(self):
