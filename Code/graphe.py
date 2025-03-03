@@ -107,9 +107,9 @@ class Graphe:
         for i in range(len(nb_couleur)):
             t = i/(len(nb_couleur))
             if t < 0.5:
-                liste_couleur.append((((1 - 2*t)*255), 2*t*255, 0))
+                liste_couleur.append(((1 - 2*t) * 255, 2 * t * 255, 0))
             else:
-                liste_couleur.append((0, 2*(1-t)*255, (2*t-1)*255))
+                liste_couleur.append((0, 2*(1-t) * 255, (2 * t - 1) * 255))
 
         for k in range(self.taille):
             x = self.l_adj[k][0][0]
@@ -197,20 +197,23 @@ class Graphe:
         for v in range(self.taille):
             for w in range(1,len(self.l_adj[v])):
                 tab_lien[v].append(self.l_adj[v][w])
-
         liste_termine = False
         liste_point = []
+        for i in range(len(self.l_adj)):
+            if len(self.l_adj[i]) == 1:
+                liste_point.append(i + 1)
+        
         while not liste_termine:
-            
             # Obtention de la première valeur en vue d'une comparaison
             cherche_donnee = True
             i = 0
-            while cherche_donnee and i <= len(tab_lien):
+            while cherche_donnee and i < len(tab_lien):
                 if len(tab_lien[i]) != 0:
                     minim = [tab_lien[i], len(tab_lien[i]), i + 1]
                     cherche_donnee = False
-                i += 1
-            
+                i += 1          
+            if i == len(tab_lien):
+                break
 
             # Iteration jusqu'a obtenir le minimum de la liste
             for y in range(0, self.taille):
@@ -224,18 +227,16 @@ class Graphe:
                 minim[0].remove(ind)
                 tab_lien[ind-1].remove(minim[2])
                 stock = ind
-            print(tab_lien)
+                if len(tab_lien[ind-1]) == 0:
+                    liste_point.append(ind)
 
             # Si le tableau des lien est vide on s'arrête
             liste_termine = True
-            for x in range(self.taille):
-                if len(tab_lien[x]) > 0:
+            for i in range(self.taille):
+                if len(tab_lien[i]) > 0:
                     liste_termine = False
-            if liste_termine:
-                liste_point.append(stock)
 
         ordre_priorite = liste_point[::-1]
-        print(ordre_priorite)
         self.glouton1(ordre_priorite)
 
     def compte_couleur_graphe(self):

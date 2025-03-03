@@ -5,7 +5,7 @@ from graphe import *
 
 WIDTH, HEIGHT = 800, 800
 p = 0.5 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
-N = 10
+N = 50
 G = Graphe(N)
 
 ### Imposer un graphe
@@ -50,7 +50,6 @@ G.glouton2()
 # G.stat_compare_graphe1_graphe2_sur_graph_non_circulaire_aleatoire(100, p, WIDTH, HEIGHT)
 # G.stat_compare_graphe1_graphe2_sur_graph_circulaire_aleatoire(100, p, CENTER, RADIUS)
 # G.stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(100, p, WIDTH, HEIGHT)
-
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
