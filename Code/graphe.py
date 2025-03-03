@@ -139,7 +139,6 @@ class Graphe:
             if c == max :
                 max += 1
             self.l_adj[o][0][2] = c
-        print(self.l_adj)
 
     def donne_couleur(self, point:int, color):
         """Permet d'attribuer une couleur à un point du graphe"""
@@ -180,7 +179,6 @@ class Graphe:
             if not self.verification_voisin_point(r):
                 couleur_differente = False
         return couleur_differente
-
 
     # Algorithme glouton 1
     def glouton1(self, ordre_priorite):
@@ -275,152 +273,11 @@ class Graphe:
         print("Sur glouton 1 avec un ordre aléatoire : " + str(self.compte_couleur_graphe()))
         self.glouton2()
         print("Sur glouton 2 : " + str(self.compte_couleur_graphe()))
-
-    def stat_compare_graphe1_graphe2_sur_graph_circulaire_aleatoire(self, m, p, WIDTH, HEIGHT):
-        ordre1 = list(range(1, self.taille + 1))
-        ordre2 = list(range(1, self.taille + 1))
-        random.shuffle(ordre2)
-        tab = [0, 0, 0]
-        for i in range(m):
-            self.graph_circulaire_aleatoire(p, WIDTH, HEIGHT)
-            self.glouton1(ordre1)
-            g1_ord1 = self.compte_couleur_graphe()
-            self.glouton1(ordre2)
-            g1_ord2 = self.compte_couleur_graphe()
-            self.glouton2()
-            g2 = self.compte_couleur_graphe()
-            if g1_ord1 < g1_ord2:
-                if g1_ord1 < g2:
-                    tab[0] += 1
-                elif g1_ord1 == g2:
-                    tab[0] += 1
-                    tab[2] += 1
-                else:
-                    tab[2] += 1
-            elif g1_ord1 == g1_ord2:
-                if g1_ord1 < g2:
-                    tab[0] += 1
-                    tab[1] += 1
-                elif g1_ord1 == g2:
-                    tab[0] += 1
-                    tab[1] += 1
-                    tab[2] += 1
-                else:
-                    tab[2] += 1
-            else:
-                if g1_ord1 <= g2:
-                    tab[1] += 1
-                else:
-                    if g1_ord2 < g2:
-                        tab[1] += 1
-                    elif g1_ord2 == g2:
-                        tab[1] += 1
-                        tab[2] += 1
-                    else:
-                        tab[2] += 1
-            self.l_adj = [[] for i in range(self.taille)]
-
-        print("Sur un graphe circulaire aléatoire de " + str(self.taille) + " points :\n\nL'algo glouton 1 avec un ordre allant de 1 à " + str(self.taille) + " renvoie dans " + str(tab[0]) + " % " + 
-        "des cas le moins de couleurs.\nL'algo glouton 1 avec un ordre aléatoire " + " renvoie dans " + str(tab[1]) + " % " + "des cas le moins de couleurs.\nL'algo glouton 2 renvoie dans " + 
-        str(tab[2]) + " % " + "des cas le moins de couleurs.")
     
-    def stat_compare_graphe1_graphe2_sur_graph_non_circulaire_aleatoire(self, m, p, CENTER, RADIUS):
-        ordre1 = list(range(1, self.taille + 1))
-        ordre2 = list(range(1, self.taille + 1))
-        random.shuffle(ordre2)
-        tab = [0, 0, 0]
-        for i in range(m):
-            self.graph_non_circulaire_aleatoire(p, CENTER, RADIUS)
-            self.glouton1(ordre1)
-            g1_ord1 = self.compte_couleur_graphe()
-            self.glouton1(ordre2)
-            g1_ord2 = self.compte_couleur_graphe()
-            self.glouton2()
-            g2 = self.compte_couleur_graphe()
-            if g1_ord1 < g1_ord2:
-                if g1_ord1 < g2:
-                    tab[0] += 1
-                elif g1_ord1 == g2:
-                    tab[0] += 1
-                    tab[2] += 1
-                else:
-                    tab[2] += 1
-            elif g1_ord1 == g1_ord2:
-                if g1_ord1 < g2:
-                    tab[0] += 1
-                    tab[1] += 1
-                elif g1_ord1 == g2:
-                    tab[0] += 1
-                    tab[1] += 1
-                    tab[2] += 1
-                else:
-                    tab[2] += 1
-            else:
-                if g1_ord1 <= g2:
-                    tab[1] += 1
-                else:
-                    if g1_ord2 < g2:
-                        tab[1] += 1
-                    elif g1_ord2 == g2:
-                        tab[1] += 1
-                        tab[2] += 1
-                    else:
-                        tab[2] += 1
-            self.l_adj = [[] for i in range(self.taille)]
+    def reset_couleur_graphe(self):
+        for i in range(len(self.l_adj)):
+            self.l_adj[i][0][2] = -1
 
-        print("Sur un graphe non circulaire aléatoire de " + str(self.taille) + " points :\n\nL'algo glouton 1 avec un ordre allant de 1 à " + str(self.taille) + " renvoie dans " + str(tab[0]) + " % " + 
-        "des cas le moins de couleurs.\nL'algo glouton 1 avec un ordre aléatoire " + " renvoie dans " + str(tab[1]) + " % " + "des cas le moins de couleurs.\nL'algo glouton 2 renvoie dans " + 
-        str(tab[2]) + " % " + "des cas le moins de couleurs.")
-
-
-    def stat_compare_graphe1_graphe2_sur_graph_circulaire_aleatoire(self, m, p, WIDTH, HEIGHT):
-        ordre1 = list(range(1, self.taille + 1))
-        ordre2 = list(range(1, self.taille + 1))
-        random.shuffle(ordre2)
-        tab = [0, 0, 0]
-        for i in range(m):
-            self.graph_circulaire_aleatoire(p, WIDTH, HEIGHT)
-            self.glouton1(ordre1)
-            g1_ord1 = self.compte_couleur_graphe()
-            self.glouton1(ordre2)
-            g1_ord2 = self.compte_couleur_graphe()
-            self.glouton2()
-            g2 = self.compte_couleur_graphe()
-            if g1_ord1 < g1_ord2:
-                if g1_ord1 < g2:
-                    tab[0] += 1
-                elif g1_ord1 == g2:
-                    tab[0] += 1
-                    tab[2] += 1
-                else:
-                    tab[2] += 1
-            elif g1_ord1 == g1_ord2:
-                if g1_ord1 < g2:
-                    tab[0] += 1
-                    tab[1] += 1
-                elif g1_ord1 == g2:
-                    tab[0] += 1
-                    tab[1] += 1
-                    tab[2] += 1
-                else:
-                    tab[2] += 1
-            else:
-                if g1_ord1 <= g2:
-                    tab[1] += 1
-                else:
-                    if g1_ord2 < g2:
-                        tab[1] += 1
-                    elif g1_ord2 == g2:
-                        tab[1] += 1
-                        tab[2] += 1
-                    else:
-                        tab[2] += 1
-            self.l_adj = [[] for i in range(self.taille)]
-
-        print("Sur un graphe circulaire aléatoire de " + str(self.taille) + " points :\n\nL'algo glouton 1 avec un ordre allant de 1 à " + str(self.taille) + " renvoie dans " + str(tab[0]) + " % " + 
-        "des cas le moins de couleurs.\nL'algo glouton 1 avec un ordre aléatoire " + " renvoie dans " + str(tab[1]) + " % " + "des cas le moins de couleurs.\nL'algo glouton 2 renvoie dans " + 
-        str(tab[2]) + " % " + "des cas le moins de couleurs.")
-    
     def stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(self, m, p, WIDTH, HEIGHT):
         ordre1 = list(range(1, self.taille + 1))
         ordre2 = list(range(1, self.taille + 1))
@@ -430,8 +287,10 @@ class Graphe:
             self.graph_planaire_aleatoire(p, WIDTH, HEIGHT)
             self.glouton1(ordre1)
             g1_ord1 = self.compte_couleur_graphe()
+            self.reset_couleur_graphe()
             self.glouton1(ordre2)
             g1_ord2 = self.compte_couleur_graphe()
+            self.reset_couleur_graphe()
             self.glouton2()
             g2 = self.compte_couleur_graphe()
             if g1_ord1 < g1_ord2:

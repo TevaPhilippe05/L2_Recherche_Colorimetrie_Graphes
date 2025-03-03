@@ -4,8 +4,8 @@ import math
 from graphe import *
 
 WIDTH, HEIGHT = 800, 800
-p = 0.5 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
-N = 40
+p = 0.8 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
+N = 20
 G = Graphe(N)
 
 ### Imposer un graphe
@@ -30,10 +30,10 @@ RADIUS = int(WIDTH * RADIUS_RATIO)
 # G.graph_non_circulaire_aleatoire(p, WIDTH, HEIGHT)
 
 ### Graphe planaire aléatoire
-G.graph_planaire_aleatoire(p, WIDTH, HEIGHT)
+# G.graph_planaire_aleatoire(p, WIDTH, HEIGHT)
 
 ### Colorimétrie aléatoire
-G.couleur_aleatoire()
+# G.couleur_aleatoire()
 
 ### Colorimétrie glouton 1
 ordre1 = list(range(1, G.taille + 1))
@@ -44,20 +44,17 @@ random.shuffle(ordre2)
 
 ### Colorimétrie glouton 2
 # G.glouton2()
-
 # print(G.compte_couleur_graphe())
 # G.compare_graphe1_graphe2()
-# G.stat_compare_graphe1_graphe2_sur_graph_non_circulaire_aleatoire(100, p, WIDTH, HEIGHT)
-# G.stat_compare_graphe1_graphe2_sur_graph_circulaire_aleatoire(100, p, CENTER, RADIUS)
-# G.stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(100, p, WIDTH, HEIGHT)
-
+G.stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(100, p, WIDTH, HEIGHT)
+"""
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Graphes")
 font = pygame.font.Font(None, 36)
 selected_point = None
-
-running = True
+"""
+running = False
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
