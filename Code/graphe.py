@@ -247,6 +247,7 @@ class Graphe:
         self.glouton1(ordre_priorite)
 
     def compte_couleur_graphe(self):
+        """Compte les couleurs d'un graphe"""
         couleurs = []
 
         for noeud in self.l_adj:
@@ -263,22 +264,17 @@ class Graphe:
 
         return len(couleurs)
 
-    def compare_graphe1_graphe2(self):
-        ordre1 = list(range(1, self.taille + 1))
-        ordre2 = list(range(1, self.taille + 1))
-        random.shuffle(ordre2)
-        self.glouton1(ordre1)
-        print("Sur glouton 1 avec un ordre de 1 à N : " + str(self.compte_couleur_graphe()))
-        self.glouton1(ordre2)
-        print("Sur glouton 1 avec un ordre aléatoire : " + str(self.compte_couleur_graphe()))
-        self.glouton2()
-        print("Sur glouton 2 : " + str(self.compte_couleur_graphe()))
-    
+    def reset_graphe(self):
+        """Remet à 0 le graphe"""
+        self.l_adj = [[] for i in range(self.taille)]
+
     def reset_couleur_graphe(self):
+        """Remet à 0 les couleurs du graphe"""
         for i in range(len(self.l_adj)):
             self.l_adj[i][0][2] = -1
 
-    def stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(self, m, p, WIDTH, HEIGHT):
+    def stat_compare_algo1_algo2_sur_graph(self, m, p, attribut1, attribut2, nom_graphe):
+        """Comparare les deux algorithmes gloutons sur le graphe fourni"""
         ordre1 = list(range(1, self.taille + 1))
         ordre2 = list(range(1, self.taille + 1))
         random.shuffle(ordre2)
@@ -297,7 +293,12 @@ class Graphe:
         max_g2 = -1
 
         for i in range(m):
-            self.graph_planaire_aleatoire(p, WIDTH, HEIGHT)
+            if nom_graphe == "graphe_planaire_aleatoire":
+                self.graph_planaire_aleatoire(p, attribut1, attribut2)
+            elif nom_graphe == "graphe_non_circulaire_aleatoire":
+                self.graph_non_circulaire_aleatoire(p, attribut1, attribut2)
+            elif nom_graphe == "graphe_circulaire_aleatoire":
+                self.graph_circulaire_aleatoire(p, attribut1, attribut2)
 
             self.glouton1(ordre1)
             g1_ord1 = self.compte_couleur_graphe()
@@ -366,13 +367,13 @@ class Graphe:
                 if g2 > max_g2:
                     max_g2 = g2
             
-            self.l_adj = [[] for i in range(self.taille)]
+            self.reset_graphe()
 
         tab[0] = round(tab[0] * (100 / m), 2)
         tab[1] = round(tab[1] * (100 / m), 2)
         tab[2] = round(tab[2] * (100 / m), 2)
         
-        print("\nSur un graphe planaire aléatoire de " + str(self.taille) + " points et avec " + str(m) + " tirages :\n\nL'algo glouton 1 avec un ordre allant de 1 à " + str(self.taille) + " renvoie dans " + str(tab[0]) + " % " + 
+        print("\nSur un " + nom_graphe + " de " + str(self.taille) + " points et avec " + str(m) + " tirages :\n\nL'algo glouton 1 avec un ordre allant de 1 à " + str(self.taille) + " renvoie dans " + str(tab[0]) + " % " + 
         "des cas le moins de couleurs.\nL'algo glouton 1 avec un ordre aléatoire " + " renvoie dans " + str(tab[1]) + " % " + "des cas le moins de couleurs.\nL'algo glouton 2 renvoie dans " + 
         str(tab[2]) + " % " + "des cas le moins de couleurs.\n")
 

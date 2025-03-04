@@ -5,7 +5,7 @@ from graphe import *
 
 WIDTH, HEIGHT = 800, 800
 p = 0.8 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
-N = 20
+N = 30
 G = Graphe(N)
 
 ### Imposer un graphe
@@ -46,8 +46,12 @@ random.shuffle(ordre2)
 # G.glouton2()
 # print(G.compte_couleur_graphe())
 # G.compare_graphe1_graphe2()
-G.stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(100, p, WIDTH, HEIGHT)
-G.stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(10000, p, WIDTH, HEIGHT)
+G.stat_compare_algo1_algo2_sur_graph(100, p, WIDTH, HEIGHT, "graphe_planaire_aleatoire")
+G.stat_compare_algo1_algo2_sur_graph(10000, p, WIDTH, HEIGHT, "graphe_planaire_aleatoire")
+G.stat_compare_algo1_algo2_sur_graph(100, p, WIDTH, HEIGHT, "graphe_non_circulaire_aleatoire")
+G.stat_compare_algo1_algo2_sur_graph(1000, p, WIDTH, HEIGHT, "graphe_non_circulaire_aleatoire")
+G.stat_compare_algo1_algo2_sur_graph(100, p, CENTER, RADIUS, "graphe_circulaire_aleatoire")
+G.stat_compare_algo1_algo2_sur_graph(1000, p, CENTER, RADIUS, "graphe_circulaire_aleatoire")
 """
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
