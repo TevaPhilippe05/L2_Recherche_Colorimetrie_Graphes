@@ -47,6 +47,7 @@ random.shuffle(ordre2)
 # print(G.compte_couleur_graphe())
 # G.compare_graphe1_graphe2()
 G.stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(100, p, WIDTH, HEIGHT)
+G.stat_compare_graphe1_graphe2_sur_graph_planaire_aleatoire(10000, p, WIDTH, HEIGHT)
 """
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)

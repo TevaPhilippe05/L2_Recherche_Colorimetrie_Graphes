@@ -283,8 +283,22 @@ class Graphe:
         ordre2 = list(range(1, self.taille + 1))
         random.shuffle(ordre2)
         tab = [0, 0, 0]
+
+        min_g1_ord1 = -1
+        min_g1_ord2 = -1
+        min_g2 = -1
+
+        moy_g1_ord1 = 0
+        moy_g1_ord2 = 0
+        moy_g2 = 0
+
+        max_g1_ord1 = -1
+        max_g1_ord2 = -1
+        max_g2 = -1
+
         for i in range(m):
             self.graph_planaire_aleatoire(p, WIDTH, HEIGHT)
+
             self.glouton1(ordre1)
             g1_ord1 = self.compte_couleur_graphe()
             self.reset_couleur_graphe()
@@ -293,6 +307,7 @@ class Graphe:
             self.reset_couleur_graphe()
             self.glouton2()
             g2 = self.compte_couleur_graphe()
+
             if g1_ord1 < g1_ord2:
                 if g1_ord1 < g2:
                     tab[0] += 1
@@ -322,8 +337,51 @@ class Graphe:
                         tab[2] += 1
                     else:
                         tab[2] += 1
+
+            moy_g1_ord1 += g1_ord1/m
+            moy_g1_ord2 += g1_ord2/m
+            moy_g2 += g2/m
+            
+            if min_g1_ord1 == -1:
+                min_g1_ord1 = g1_ord1
+                min_g1_ord2 = g1_ord2
+                min_g2 = g2
+
+                max_g1_ord1 = g1_ord1
+                max_g1_ord2 = g1_ord2
+                max_g2 = g2
+
+            else:
+                if g1_ord1 < min_g1_ord1:
+                    min_g1_ord1 = g1_ord1
+                if g1_ord2 < min_g1_ord2:
+                    min_g1_ord2 = g1_ord2
+                if g2 < min_g2:
+                    min_g2 = g2
+
+                if g1_ord1 > max_g1_ord1:
+                    max_g1_ord1 = g1_ord1
+                if g1_ord2 > max_g1_ord2:
+                    max_g1_ord2 = g1_ord2
+                if g2 > max_g2:
+                    max_g2 = g2
+            
             self.l_adj = [[] for i in range(self.taille)]
 
-        print("Sur un graphe non circulaire aléatoire de " + str(self.taille) + " points :\n\nL'algo glouton 1 avec un ordre allant de 1 à " + str(self.taille) + " renvoie dans " + str(tab[0]) + " % " + 
+        tab[0] = round(tab[0] * (100 / m), 2)
+        tab[1] = round(tab[1] * (100 / m), 2)
+        tab[2] = round(tab[2] * (100 / m), 2)
+        
+        print("\nSur un graphe planaire aléatoire de " + str(self.taille) + " points et avec " + str(m) + " tirages :\n\nL'algo glouton 1 avec un ordre allant de 1 à " + str(self.taille) + " renvoie dans " + str(tab[0]) + " % " + 
         "des cas le moins de couleurs.\nL'algo glouton 1 avec un ordre aléatoire " + " renvoie dans " + str(tab[1]) + " % " + "des cas le moins de couleurs.\nL'algo glouton 2 renvoie dans " + 
-        str(tab[2]) + " % " + "des cas le moins de couleurs.")
+        str(tab[2]) + " % " + "des cas le moins de couleurs.\n")
+
+        print(
+            "Sur " + str(m) + " tirages, on obtient donc :\n\n" + 
+            "Un nombre minimale de couleur de \n" +
+            "Algo glouton 1 ordre 1 : " + str(min_g1_ord1) + "\nAlgo glouton 1 ordre 2 : " + str(min_g1_ord2) + "\nAlgo glouton 2 : " + str(min_g2) + "\n\n" + 
+            "Un nombre moyen de couleur de :\n" +
+            "Algo glouton 1 ordre 1 : " + str(round(moy_g1_ord1,2)) + "\nAlgo glouton 1 ordre 2 : " + str(round(moy_g1_ord2,2)) + "\nAlgo glouton 2 : " + str(round(moy_g2,2)) + "\n\n" + 
+            "Un nombre maximal de couleur de :\n" +
+            "Algo glouton 1 ordre 1 : " + str(max_g1_ord1) + "\nAlgo glouton 1 ordre 2 : " + str(max_g1_ord2) + "\nAlgo glouton 2 : " + str(max_g2)
+            )
