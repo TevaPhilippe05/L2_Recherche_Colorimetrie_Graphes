@@ -105,12 +105,11 @@ class Graphe:
                 nb_couleur.append(self.l_adj[i][0][2])
 
         for i in range(len(nb_couleur)):
-            t = i/(len(nb_couleur))
+            t = i/(len(nb_couleur)-1)
             if t < 0.5:
                 liste_couleur.append(((1 - 2*t) * 255, 2 * t * 255, 0))
             else:
                 liste_couleur.append((0, 2*(1-t) * 255, (2 * t - 1) * 255))
-
         for k in range(self.taille):
             x = self.l_adj[k][0][0]
             y = self.l_adj[k][0][1]
@@ -140,7 +139,7 @@ class Graphe:
                 max += 1
             self.l_adj[o][0][2] = c
 
-    def donne_couleur(self, point:int, color):
+    def donne_couleur(self, point:int, color:int):
         """Permet d'attribuer une couleur à un point du graphe"""
         ind = point - 1
         self.l_adj[ind][0][2] = color
@@ -197,7 +196,9 @@ class Graphe:
     def glouton2(self):
         """Fait appel au premier algorithme glouton en lui soumettant un
         ordre de priorité qui correspond à l'ordre inverse des plus petits
-        degrés calculés en enlevant les points déjà calculés"""
+        degrés calculés en enlevant les points déjà calculés
+        
+        Garantit un maximum de 6 couleurs sur graphes planaires"""
 
         # Construction d'un tableau temporaire des lien
         tab_lien = [[] for u in range(self.taille)]
@@ -245,6 +246,104 @@ class Graphe:
 
         ordre_priorite = liste_point[::-1]
         self.glouton1(ordre_priorite)
+
+    def supprime_p_newG(self, point, graphe):
+        """Supprime un point sur un nouveau graphe"""
+
+        """
+        graphe = [[[720.0, 400.0, -1, 720.0, 400.0], 2, 3, 4, 5, 6, 8], [[626.3, 626.3, -1, 626.3, 626.3], 1, 3, 4, 5, 6, 7, 8], 
+             [[400.0, 720.0, -1, 400.0, 720.0], 1, 2, 4, 5, 7, 8], [[173.7, 626.3, -1, 173.7, 626.3], 1, 2, 3, 5, 6, 7, 8], 
+             [[80.0, 400.0, -1, 80.0, 400.0], 1, 2, 3, 4, 6, 7, 8], [[173.7, 173.7, -1, 173.7, 173.7], 1, 2, 4, 5],
+             [[400.0, 80.0, -1, 400.0, 80.0], 2, 3, 4, 5, 8], [[626.3, 173.7, -1, 626.3, 173.7], 1, 2, 3, 4, 5, 7]]
+        """
+        for i in range(1, len(graphe[point-1])):
+            graphe[graphe[point-1][i]-1].remove(point)
+        graphe[point-1] = []
+    
+    def fusionne_3p_newG(self, point1, point2, point3, graphe):
+        """Fussionne 3 points en un sur un nouveau graphe"""
+        graphe.append([["tempo", -1]])
+        lst_voisin = []
+        for i in range(1, len(graphe[point1-1])):
+            point = graphe[point1-1][i]
+            if not point in lst_voisin:
+                lst_voisin.append(point)
+
+        for i in range(1, len(graphe[point2-1])):
+            point = graphe[point2-1][i]
+            if not point in lst_voisin:
+                lst_voisin.append(point)
+
+        for i in range(1, len(graphe[point3-1])):
+            point = graphe[point3-1][i]
+            if not point in lst_voisin:
+                lst_voisin.append(point)
+        
+        self.supprime_p_newG(point1, graphe)
+        self.supprime_p_newG(point2, graphe)
+        self.supprime_p_newG(point3, graphe)
+
+        lst_voisin.remove(point1)
+        lst_voisin.remove(point2)
+        lst_voisin.remove(point3)
+
+        for elem in lst_voisin:
+            graphe[len(graphe)-1].append(elem)
+
+        for elem in lst_voisin:
+            graphe[elem - 1].append(len(graphe))
+        print(graphe)
+
+    def trouve_non_adjacent(self, lst_point, graphe):
+        """trouve 2 sommets non adjacents parmis une liste de 5 sommet"""
+        trouve = False
+        p1 = 0
+        p2 = 1
+        while not trouve:
+            if not lst_point[p1] in graphe[lst_point[p2]-1]:
+                trouve = True
+            else:
+                if p2 == 4:
+                    p1 += 1
+                    p2 = 0
+                else:
+                    p2 += 1
+                    if p1 == p2:
+                        p2+=1
+                        
+        print(lst_point[p1], lst_point[p2])
+
+        # return p1, p2
+
+    def algo3(self):
+        """Garantit un maxiumum de 5 couleur sur les graphes planaires"""
+
+        """
+        if len(G) == 1:
+            u = unique sommet de G
+            Couleur u = 1
+            return ..
+        
+        else
+            u = sommet de degrés min de G
+            V = voisins de u
+            if degres u <= 4:
+                Gprime = supprime_p_newG(u, G)
+                algo3
+                couleur G sans u = couleur Gprime
+                couleur u = couleur pas dans le voisinage
+                return ..
+
+            else:
+                v,w =  trouve_non_adjacent(V, G)
+                Gprime, x = fusionne_3p_newG()
+                algo3
+                couleur G sans u v w = couleur Gprime
+                couleur u, w = couleur x
+                couleur u = couleur pas dans le voisinage
+                return ..
+        """
+   
 
     def compte_couleur_graphe(self):
         """Compte les couleurs d'un graphe"""

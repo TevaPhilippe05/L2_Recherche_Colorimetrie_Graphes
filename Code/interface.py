@@ -5,7 +5,7 @@ from graphe import *
 
 WIDTH, HEIGHT = 800, 800
 p = 0.8 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
-N = 30
+N = 20
 G = Graphe(N)
 
 ### Imposer un graphe
@@ -18,8 +18,10 @@ graphe = [[[720.0, 400.0, -1, 720.0, 400.0], 2, 3, 4, 5, 6, 8], [[626.3, 626.3, 
              [[80.0, 400.0, -1, 80.0, 400.0], 1, 2, 3, 4, 6, 7, 8], [[173.7, 173.7, -1, 173.7, 173.7], 1, 2, 4, 5],
              [[400.0, 80.0, -1, 400.0, 80.0], 2, 3, 4, 5, 8], [[626.3, 173.7, -1, 626.3, 173.7], 1, 2, 3, 4, 5, 7]]
 
-# G.force_graph_coord(graphe)
-
+G.force_graph_coord(graphe)
+G.supprime_p_newG(2, graphe)
+G.fusionne_3p_newG(1, 3, 4, graphe)
+G.trouve_non_adjacent([5,6,7,8,9], graphe)
 ### Graphe aléatoire circulaire
 RADIUS_RATIO = 0.4  # Rayon fait 40 % de la largeur de l'écran
 CENTER = (WIDTH // 2, HEIGHT // 2)
@@ -44,15 +46,19 @@ random.shuffle(ordre2)
 
 ### Colorimétrie glouton 2
 # G.glouton2()
+
 # print(G.compte_couleur_graphe())
 # G.compare_graphe1_graphe2()
+# print(G.l_adj)
+"""
 G.stat_compare_algo1_algo2_sur_graph(100, p, WIDTH, HEIGHT, "graphe_planaire_aleatoire")
 G.stat_compare_algo1_algo2_sur_graph(10000, p, WIDTH, HEIGHT, "graphe_planaire_aleatoire")
 G.stat_compare_algo1_algo2_sur_graph(100, p, WIDTH, HEIGHT, "graphe_non_circulaire_aleatoire")
 G.stat_compare_algo1_algo2_sur_graph(1000, p, WIDTH, HEIGHT, "graphe_non_circulaire_aleatoire")
 G.stat_compare_algo1_algo2_sur_graph(100, p, CENTER, RADIUS, "graphe_circulaire_aleatoire")
 G.stat_compare_algo1_algo2_sur_graph(1000, p, CENTER, RADIUS, "graphe_circulaire_aleatoire")
-"""
+
+
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Graphes")
