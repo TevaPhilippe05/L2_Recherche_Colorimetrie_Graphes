@@ -47,7 +47,6 @@ print(graphe)
 print(G.sommet_degres_min(graphe))
 print(G.voisin_point(graphe, 6))
 """
-print(G.algo3(graphe4))
 
 ### Graphe aléatoire circulaire
 RADIUS_RATIO = 0.4  # Rayon fait 40 % de la largeur de l'écran
@@ -74,8 +73,9 @@ random.shuffle(ordre2)
 ### Colorimétrie glouton 2
 # G.glouton2()
 
-# print(G.compte_couleur_graphe())
-# G.compare_graphe1_graphe2()
+# Algorithme de colorimétrie numéro 3
+G.algo3(graphe4)
+
 """
 G.stat_compare_algo1_algo2_sur_graph(100, p, WIDTH, HEIGHT, "graphe_planaire_aleatoire")
 G.stat_compare_algo1_algo2_sur_graph(10000, p, WIDTH, HEIGHT, "graphe_planaire_aleatoire")
@@ -83,15 +83,15 @@ G.stat_compare_algo1_algo2_sur_graph(100, p, WIDTH, HEIGHT, "graphe_non_circulai
 G.stat_compare_algo1_algo2_sur_graph(1000, p, WIDTH, HEIGHT, "graphe_non_circulaire_aleatoire")
 G.stat_compare_algo1_algo2_sur_graph(100, p, CENTER, RADIUS, "graphe_circulaire_aleatoire")
 G.stat_compare_algo1_algo2_sur_graph(1000, p, CENTER, RADIUS, "graphe_circulaire_aleatoire")
+"""
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Graphes")
 font = pygame.font.Font(None, 36)
 selected_point = None
-"""
 
-running = False
+running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

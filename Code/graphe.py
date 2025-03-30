@@ -1,6 +1,7 @@
 import random
 import pygame
 import math
+import copy
 
 class Graphe:
     def __init__(self, n):
@@ -257,12 +258,6 @@ class Graphe:
     def supprime_p_newG(self, point, graphe):
         """Supprime un point sur un nouveau graphe"""
 
-        """
-        graphe = [[[720.0, 400.0, -1, 720.0, 400.0], 2, 3, 4, 5, 6, 8], [[626.3, 626.3, -1, 626.3, 626.3], 1, 3, 4, 5, 6, 7, 8], 
-             [[400.0, 720.0, -1, 400.0, 720.0], 1, 2, 4, 5, 7, 8], [[173.7, 626.3, -1, 173.7, 626.3], 1, 2, 3, 5, 6, 7, 8], 
-             [[80.0, 400.0, -1, 80.0, 400.0], 1, 2, 3, 4, 6, 7, 8], [[173.7, 173.7, -1, 173.7, 173.7], 1, 2, 4, 5],
-             [[400.0, 80.0, -1, 400.0, 80.0], 2, 3, 4, 5, 8], [[626.3, 173.7, -1, 626.3, 173.7], 1, 2, 3, 4, 5, 7]]
-        """
         for i in range(1, len(graphe[point-1])):
             graphe[graphe[point-1][i]-1].remove(point)
         graphe[point-1] = []
@@ -374,60 +369,66 @@ class Graphe:
                 couleur += 1
         return couleur
 
+    def copie_lst(self, graphe):
+        return copy.deepcopy(graphe)
+
     def colorimetrie3(self, graphe):
         """Garantit un maxiumum de 5 couleur sur les graphes planaires"""
         if self.compte_tab(graphe) == 1:
-            print("state1")
             u = self.sommets_graphe(graphe)[0]
             graphe[u-1][0][2] = 0
             return graphe
         else:
-            print("state2")
             u = self.sommet_degres_min(graphe)
             v = self.voisin_point(graphe, u)
             if len(v) <= 4:
-                print("state2.1")
-                g_prime = self.supprime_p_newG(u, graphe.copy())
+                g_prime = self.copie_lst(graphe)
+                g_prime = self.supprime_p_newG(u, g_prime)
                 g_prime = self.algo3(g_prime)
                 graphe = self.correspondance_couleur(graphe, g_prime)
                 graphe[u-1][0][2] = self.premiere_couleur_dispo(v, graphe)
                 return graphe
             else:
-                print("state2.2")
                 x, y = self.trouve_non_adjacent(v, graphe)
-                print(x, y)
+                g_prime = self.copie_lst(graphe)
+                g_prime = self.fusionne_3p_newG(u, x, y, g_prime)
+                g_prime = self.algo3(g_prime)
+                couleur_z = g_prime[len(g_prime)-1][0][2]             
+                graphe = self.correspondance_couleur(graphe, g_prime)
+                graphe[x-1][0][2] = couleur_z
+                graphe[y-1][0][2] = couleur_z
+                graphe[u-1][0][2] = self.premiere_couleur_dispo(v, graphe)
+                return graphe
+                """
+                if self.compte_tab(graphe) == 1:
+                    u = unique sommet de G
+                    Couleur u = 1
+                    return ..
+
+                else
+                    u = sommet_degrés_min de G
+                    V = voisins de u
+                    if degres u <= 4:
+                        Gprime = supprime_p_newG(u, G)
+                        algo3
+                        couleur G sans u = couleur Gprime
+                        couleur u = couleur pas dans le voisinage
+                        return ..
+
+                    else:
+                        v,w =  trouve_non_adjacent(V, G)
+                        Gprime, x = fusionne_3p_newG()
+                        algo3
+                        couleur G sans u v w = couleur Gprime
+                        couleur u, w = couleur x
+                        couleur u = couleur pas dans le voisinage
+                        return ..
+                """
         
     def algo3(self, graphe):
         g = self.colorimetrie3(graphe)
         self.l_adj = g
         return self.l_adj
-
-        """
-        if self.compte_tab(graphe) == 1:
-            u = unique sommet de G
-            Couleur u = 1
-            return ..
-        
-        else
-            u = sommet_degrés_min de G
-            V = voisins de u
-            if degres u <= 4:
-                Gprime = supprime_p_newG(u, G)
-                algo3
-                couleur G sans u = couleur Gprime
-                couleur u = couleur pas dans le voisinage
-                return ..
-
-            else:
-                v,w =  trouve_non_adjacent(V, G)
-                Gprime, x = fusionne_3p_newG()
-                algo3
-                couleur G sans u v w = couleur Gprime
-                couleur u, w = couleur x
-                couleur u = couleur pas dans le voisinage
-                return ..
-        """
-   
 
     def compte_couleur_graphe(self):
         """Compte les couleurs d'un graphe"""
