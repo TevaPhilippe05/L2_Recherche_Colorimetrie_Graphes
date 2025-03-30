@@ -104,16 +104,20 @@ class Graphe:
             if not self.l_adj[i][0][2] in nb_couleur:
                 nb_couleur.append(self.l_adj[i][0][2])
 
-        for i in range(len(nb_couleur)):
-            t = i/(len(nb_couleur)-1)
-            if t < 0.5:
-                liste_couleur.append(((1 - 2*t) * 255, 2 * t * 255, 0))
-            else:
-                liste_couleur.append((0, 2*(1-t) * 255, (2 * t - 1) * 255))
+        if len(nb_couleur) == 1:
+            liste_couleur.append((255, 0, 0))
+        else:
+            for i in range(len(nb_couleur)):
+                t = i/(len(nb_couleur)-1)
+                if t < 0.5:
+                    liste_couleur.append(((1 - 2*t) * 255, 2 * t * 255, 0))
+                else:
+                    liste_couleur.append((0, 2*(1-t) * 255, (2 * t - 1) * 255))
+
         for k in range(self.taille):
             x = self.l_adj[k][0][0]
             y = self.l_adj[k][0][1]
-            
+
             color = liste_couleur[self.l_adj[k][0][2]]
             pygame.draw.circle(screen, color, (int(x), int(y)), 14)
             
@@ -144,11 +148,13 @@ class Graphe:
         ind = point - 1
         self.l_adj[ind][0][2] = color
 
-    def voisin_point(self, point:int):
+    def voisin_point(self, graphe, point:int):
         """Permet de connaitre les voisins d'un point"""
         ind = point - 1
-        for e in range(1,len(self.l_adj[ind])):
-            print(self.l_adj[ind][e])
+        lst_voisin = []
+        for e in range(1,len(graphe[ind])):
+            lst_voisin.append(graphe[ind][e])
+        return lst_voisin
     
     def verification_voisin_point(self, point:int):
         """Vérifie que tout les voisins d'un points ont une couleur différente"""
@@ -247,6 +253,7 @@ class Graphe:
         ordre_priorite = liste_point[::-1]
         self.glouton1(ordre_priorite)
 
+    # Pour l'algo 3
     def supprime_p_newG(self, point, graphe):
         """Supprime un point sur un nouveau graphe"""
 
@@ -259,10 +266,11 @@ class Graphe:
         for i in range(1, len(graphe[point-1])):
             graphe[graphe[point-1][i]-1].remove(point)
         graphe[point-1] = []
+        return graphe
     
     def fusionne_3p_newG(self, point1, point2, point3, graphe):
         """Fussionne 3 points en un sur un nouveau graphe"""
-        graphe.append([["tempo", -1]])
+        graphe.append([["tempo", "tempo", -1]])
         lst_voisin = []
         for i in range(1, len(graphe[point1-1])):
             point = graphe[point1-1][i]
@@ -292,7 +300,7 @@ class Graphe:
 
         for elem in lst_voisin:
             graphe[elem - 1].append(len(graphe))
-        print(graphe)
+        return graphe
 
     def trouve_non_adjacent(self, lst_point, graphe):
         """trouve 2 sommets non adjacents parmis une liste de 5 sommet"""
@@ -311,21 +319,97 @@ class Graphe:
                     if p1 == p2:
                         p2+=1
                         
-        print(lst_point[p1], lst_point[p2])
+        return lst_point[p1], lst_point[p2]
 
-        # return p1, p2
+    def compte_tab(self, graphe):
+        """Compte le nombre de sommets non vide du graphe"""
+        compteur = 0
+        for i in range(len(graphe)):
+            if graphe[i] != []:
+                compteur += 1
+        return compteur
 
-    def algo3(self):
+    def sommets_graphe(self, graphe):
+        """Renvoie les sommets non vide du graphe (numéro du sommet pas l'indice)"""
+        lst_sommets = []
+        for i in range(len(graphe)):
+            if graphe[i] != []:
+                lst_sommets.append(i+1)
+        return lst_sommets
+    
+    def sommet_degres_min(self, graphe):
+        """Renvoie le sommet de degré min d'un graphe (numéro du sommet pas l'indice)"""
+        s_deg_min = -1
+        for i in range(1, len(graphe)):
+            if graphe[i] != []:
+                if s_deg_min == -1:
+                    s_deg_min = i + 1
+                    deg_min = len(graphe[i]) - 1
+                elif len(graphe[i]) - 1 < deg_min:
+                    s_deg_min = i + 1
+                    deg_min = len(graphe[i]) - 1
+        return s_deg_min
+    
+    def correspondance_couleur(self, graphe, g_prime):
+        """Applique les couleurs de g_prime sur g"""
+        for i in range(len(graphe)):
+            if g_prime[i] != []:
+                graphe[i][0][2] = g_prime[i][0][2]
+        return graphe
+    
+    def premiere_couleur_dispo(self, lst_point, graphe):
+        """donne la premiere couleur disponible parmis une liste de couleurs"""
+        pas_dispo = []
+        for i in range(len(lst_point)):
+            couleur = graphe[lst_point[i]-1][0][2]
+            if not couleur in pas_dispo:
+                pas_dispo.append(couleur)
+        
+        trouve = False
+        couleur = 0
+        while not trouve:
+            if not couleur in pas_dispo:
+                trouve = True
+            else:
+                couleur += 1
+        return couleur
+
+    def colorimetrie3(self, graphe):
         """Garantit un maxiumum de 5 couleur sur les graphes planaires"""
+        if self.compte_tab(graphe) == 1:
+            print("state1")
+            u = self.sommets_graphe(graphe)[0]
+            graphe[u-1][0][2] = 0
+            return graphe
+        else:
+            print("state2")
+            u = self.sommet_degres_min(graphe)
+            v = self.voisin_point(graphe, u)
+            if len(v) <= 4:
+                print("state2.1")
+                g_prime = self.supprime_p_newG(u, graphe.copy())
+                g_prime = self.algo3(g_prime)
+                graphe = self.correspondance_couleur(graphe, g_prime)
+                graphe[u-1][0][2] = self.premiere_couleur_dispo(v, graphe)
+                return graphe
+            else:
+                print("state2.2")
+                x, y = self.trouve_non_adjacent(v, graphe)
+                print(x, y)
+        
+    def algo3(self, graphe):
+        g = self.colorimetrie3(graphe)
+        self.l_adj = g
+        return self.l_adj
 
         """
-        if len(G) == 1:
+        if self.compte_tab(graphe) == 1:
             u = unique sommet de G
             Couleur u = 1
             return ..
         
         else
-            u = sommet de degrés min de G
+            u = sommet_degrés_min de G
             V = voisins de u
             if degres u <= 4:
                 Gprime = supprime_p_newG(u, G)

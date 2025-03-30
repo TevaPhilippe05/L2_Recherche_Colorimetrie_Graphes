@@ -3,25 +3,52 @@ import math
 
 from graphe import *
 
+### Imposer un graphe
+
+# Graphe circulaire peu dense
+# N = 8
+graphe = [[[720.0, 400.0, -1, 720.0, 400.0], 3, 4, 5], [[626.3, 626.3, -1, 626.3, 626.3], 5], [[400.0, 720.0, -1, 400.0, 720.0], 1, 4, 5, 6, 7], 
+          [[173.7, 626.3, -1, 173.7, 626.3], 1, 3, 7, 8], [[80.0, 400.0, -1, 80.0, 400.0], 1, 2, 3, 6], [[173.7, 173.7, -1, 173.7, 173.7], 3, 5, 7, 8], 
+           [[400.0, 80.0, -1, 400.0, 80.0], 3, 4, 6], [[626.3, 173.7, -1, 626.3, 173.7], 4, 6]]
+
+# Graphe circulaire dense
+# N = 8
+graphe2 = [[[720.0, 400.0, -1, 720.0, 400.0], 2, 3, 4, 5, 6, 8], [[626.3, 626.3, -1, 626.3, 626.3], 1, 3, 4, 5, 6, 7, 8], 
+           [[400.0, 720.0, -1, 400.0, 720.0], 1, 2, 4, 5, 7, 8], [[173.7, 626.3, -1, 173.7, 626.3], 1, 2, 3, 5, 6, 7, 8], 
+           [[80.0, 400.0, -1, 80.0, 400.0], 1, 2, 3, 4, 6, 7, 8], [[173.7, 173.7, -1, 173.7, 173.7], 1, 2, 4, 5],
+           [[400.0, 80.0, -1, 400.0, 80.0], 2, 3, 4, 5, 8], [[626.3, 173.7, -1, 626.3, 173.7], 1, 2, 3, 4, 5, 7]]
+
+# Graphe planaire avec 1 seul sommet de degré 5
+# N = 8
+graphe3 = [[[96, 737, -1, 96, 737], 6, 3, 2, 4, 8], [[365, 599, -1, 365, 599], 5, 1], [[468, 490, -1, 468, 490], 1], 
+           [[229, 305, -1, 229, 305], 6, 7, 1, 8], [[585, 390, -1, 585, 390], 2, 6], [[703, 165, -1, 703, 165], 1, 4, 5, 7], 
+           [[299, 95, -1, 299, 95], 6, 4, 8], [[46, 247, -1, 46, 247], 4, 7, 1]]
+
+# Graphe avec chaque sommets (12) de degrés 5
+N = 12
+graphe4 = [[[385, 22, -1, 385.0, 22.0], 2, 3, 8, 9, 12], [[623, 130, -1, 623.0, 130.0], 1, 3, 4, 5, 9], [[150, 122, -1, 150.0, 122.0], 1, 2, 4, 7, 8], 
+           [[384, 229, -1, 384.0, 229.0], 2, 3, 5, 6, 7], [[604, 375, -1, 604.0, 375.0], 2, 4, 6, 9, 10], [[387, 477, -1, 387.0, 477], 4, 5, 7, 10, 11], 
+           [[175, 367, -1, 175.0, 367.0], 3, 4, 6, 8, 11], [[94, 590, -1, 94.0, 590.0], 1, 3, 7, 11, 12], [[712, 592, -1, 712.0, 592.0], 1, 2, 5, 10, 12], 
+           [[518, 662, -1, 518.0, 662.0], 5, 6, 9, 11, 12], [[271, 664, -1, 271.0, 664.0], 6, 7, 8, 10, 12], [[356, 752, -1, 356.0, 752.0], 1, 8, 9, 10, 11]]
+
 WIDTH, HEIGHT = 800, 800
 p = 0.8 # Proba de création du graphe (plus elle est élevé, plus il y a d'arrêtes)
-N = 20
+# N = 10
 G = Graphe(N)
+G.force_graph_coord(graphe4)
 
-### Imposer un graphe
-"""graphe = [[[720.0, 400.0, -1, 720.0, 400.0], 3, 4, 5], [[626.3, 626.3, -1, 626.3, 626.3], 5], [[400.0, 720.0, -1, 400.0, 720.0], 1, 4, 5, 6, 7], 
-          [[173.7, 626.3, -1, 173.7, 626.3], 1, 3, 7, 8], [[80.0, 400.0, -1, 80.0, 400.0], 1, 2, 3, 6], [[173.7, 173.7, -1, 173.7, 173.7], 3, 5, 7, 8], 
-          [[400.0, 80.0, -1, 400.0, 80.0], 3, 4, 6], [[626.3, 173.7, -1, 626.3, 173.7], 4, 6]]"""
-
-graphe = [[[720.0, 400.0, -1, 720.0, 400.0], 2, 3, 4, 5, 6, 8], [[626.3, 626.3, -1, 626.3, 626.3], 1, 3, 4, 5, 6, 7, 8], 
-             [[400.0, 720.0, -1, 400.0, 720.0], 1, 2, 4, 5, 7, 8], [[173.7, 626.3, -1, 173.7, 626.3], 1, 2, 3, 5, 6, 7, 8], 
-             [[80.0, 400.0, -1, 80.0, 400.0], 1, 2, 3, 4, 6, 7, 8], [[173.7, 173.7, -1, 173.7, 173.7], 1, 2, 4, 5],
-             [[400.0, 80.0, -1, 400.0, 80.0], 2, 3, 4, 5, 8], [[626.3, 173.7, -1, 626.3, 173.7], 1, 2, 3, 4, 5, 7]]
-
-G.force_graph_coord(graphe)
+"""
 G.supprime_p_newG(2, graphe)
 G.fusionne_3p_newG(1, 3, 4, graphe)
 G.trouve_non_adjacent([5,6,7,8,9], graphe)
+print(G.compte_tab(graphe))
+print(G.sommets_graphe(graphe))
+print(graphe)
+print(G.sommet_degres_min(graphe))
+print(G.voisin_point(graphe, 6))
+"""
+print(G.algo3(graphe4))
+
 ### Graphe aléatoire circulaire
 RADIUS_RATIO = 0.4  # Rayon fait 40 % de la largeur de l'écran
 CENTER = (WIDTH // 2, HEIGHT // 2)
@@ -49,7 +76,6 @@ random.shuffle(ordre2)
 
 # print(G.compte_couleur_graphe())
 # G.compare_graphe1_graphe2()
-# print(G.l_adj)
 """
 G.stat_compare_algo1_algo2_sur_graph(100, p, WIDTH, HEIGHT, "graphe_planaire_aleatoire")
 G.stat_compare_algo1_algo2_sur_graph(10000, p, WIDTH, HEIGHT, "graphe_planaire_aleatoire")
@@ -58,13 +84,13 @@ G.stat_compare_algo1_algo2_sur_graph(1000, p, WIDTH, HEIGHT, "graphe_non_circula
 G.stat_compare_algo1_algo2_sur_graph(100, p, CENTER, RADIUS, "graphe_circulaire_aleatoire")
 G.stat_compare_algo1_algo2_sur_graph(1000, p, CENTER, RADIUS, "graphe_circulaire_aleatoire")
 
-
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Graphes")
 font = pygame.font.Font(None, 36)
 selected_point = None
 """
+
 running = False
 while running:
     for event in pygame.event.get():
