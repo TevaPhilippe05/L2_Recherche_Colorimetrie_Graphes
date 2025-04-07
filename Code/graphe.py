@@ -257,7 +257,7 @@ class Graphe:
     # Pour l'algo 3
     def supprime_p_newG(self, point, graphe):
         """Supprime un point sur un nouveau graphe"""
-
+        
         for i in range(1, len(graphe[point-1])):
             graphe[graphe[point-1][i]-1].remove(point)
         graphe[point-1] = []
@@ -400,6 +400,8 @@ class Graphe:
                 graphe[u-1][0][2] = self.premiere_couleur_dispo(v, graphe)
                 return graphe
                 """
+                algo:
+
                 if self.compte_tab(graphe) == 1:
                     u = unique sommet de G
                     Couleur u = 1
@@ -424,11 +426,81 @@ class Graphe:
                         couleur u = couleur pas dans le voisinage
                         return ..
                 """
-        
+
     def algo3(self, graphe):
         g = self.colorimetrie3(graphe)
         self.l_adj = g
         return self.l_adj
+
+    def giga_graphe_un_point_commun(self, niveau, graphe):
+        if niveau == 0:
+            print(graphe)
+            for i in range(len(graphe)):
+                graphe[i][0][0] += i * 0.8 - 100
+                graphe[i][0][1] += i * 0.8
+                graphe[i][0][3] += i * 0.8 - 100
+                graphe[i][0][4] += i * 0.8
+            self.l_adj = self.copie_lst(graphe)
+        else:
+            graphe_tempo = self.copie_lst(graphe)
+            taille_point_liaison = len(graphe_tempo[0])
+
+            for i in range(1, 4):
+                for k in range(self.taille):
+                    print("yooooooo")
+                    print(graphe_tempo)
+                    if k == 0:
+                        graphe_tempo.append(self.copie_lst(graphe_tempo[k][:taille_point_liaison]))
+                    else:
+                        graphe_tempo.append(self.copie_lst(graphe_tempo[k]))
+                    for j in range(1, len(graphe_tempo[k + self.taille * i])):
+                        graphe_tempo[k + self.taille * i][j] += self.taille * i
+
+                print("ok" + str(self.taille * i + 1) + "\n")
+
+                graphe_tempo[0].append(self.taille * i + 1)
+                graphe_tempo[self.taille * i].append(1)
+            
+            new_graphe = self.copie_lst(graphe_tempo)
+            niveau -= 1
+            self.taille += self.taille * 3
+            self.giga_graphe(niveau, new_graphe) 
+
+    """
+    def giga_graphe_deux_point_commun(self, niveau, graphe):
+        if niveau == 0:
+            print(graphe)
+            for i in range(len(graphe)):
+                graphe[i][0][0] += i * 0.8 - 100
+                graphe[i][0][1] += i * 0.8
+                graphe[i][0][3] += i * 0.8 - 100
+                graphe[i][0][4] += i * 0.8
+            self.l_adj = self.copie_lst(graphe)
+        else:
+            graphe_tempo = self.copie_lst(graphe)
+            taille_point_liaison = len(graphe_tempo[0])
+
+            for i in range(1, 4):
+                for k in range(self.taille):
+                    print("yooooooo")
+                    print(graphe_tempo)
+                    if k == 0:
+                        graphe_tempo.append(self.copie_lst(graphe_tempo[k][:taille_point_liaison]))
+                    else:
+                        graphe_tempo.append(self.copie_lst(graphe_tempo[k]))
+                    for j in range(1, len(graphe_tempo[k + self.taille * i])):
+                        graphe_tempo[k + self.taille * i][j] += self.taille * i
+
+                print("ok" + str(self.taille * i + 1) + "\n")
+
+                graphe_tempo[0].append(self.taille * i + 1)
+                graphe_tempo[self.taille * i].append(1)
+            
+            new_graphe = self.copie_lst(graphe_tempo)
+            niveau -= 1
+            self.taille += self.taille * 3
+            self.giga_graphe(niveau, new_graphe) 
+    """
 
     def compte_couleur_graphe(self):
         """Compte les couleurs d'un graphe"""

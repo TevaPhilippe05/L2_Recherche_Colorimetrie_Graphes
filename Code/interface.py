@@ -74,7 +74,8 @@ random.shuffle(ordre2)
 # G.glouton2()
 
 # Algorithme de colorimétrie numéro 3
-G.algo3(graphe4)
+G.giga_graphe(2, G.l_adj)
+G.algo3(G.copie_lst(G.l_adj))
 
 """
 G.stat_compare_algo1_algo2_sur_graph(100, p, WIDTH, HEIGHT, "graphe_planaire_aleatoire")
