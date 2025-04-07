@@ -74,7 +74,7 @@ random.shuffle(ordre2)
 # G.glouton2()
 
 # Algorithme de colorimétrie numéro 3
-G.giga_graphe(2, G.l_adj)
+G.giga_graphe_trois_point_commun_methode2(3, G.l_adj)
 G.algo3(G.copie_lst(G.l_adj))
 
 """

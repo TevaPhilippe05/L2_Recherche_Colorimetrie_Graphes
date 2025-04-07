@@ -432,23 +432,22 @@ class Graphe:
         self.l_adj = g
         return self.l_adj
 
-    def giga_graphe_un_point_commun(self, niveau, graphe):
+    def giga_graphe_un_point_commun_methode1(self, niveau, graphe):
         if niveau == 0:
             print(graphe)
             for i in range(len(graphe)):
-                graphe[i][0][0] += i * 0.8 - 100
-                graphe[i][0][1] += i * 0.8
-                graphe[i][0][3] += i * 0.8 - 100
-                graphe[i][0][4] += i * 0.8
+                graphe[i][0][0] += i * 0.4 - 50
+                graphe[i][0][1] += i * 0.4
+                graphe[i][0][3] += i * 0.4 - 50
+                graphe[i][0][4] += i * 0.4
             self.l_adj = self.copie_lst(graphe)
         else:
+            nb_graphe = 5
             graphe_tempo = self.copie_lst(graphe)
             taille_point_liaison = len(graphe_tempo[0])
 
-            for i in range(1, 4):
+            for i in range(1, nb_graphe + 1):
                 for k in range(self.taille):
-                    print("yooooooo")
-                    print(graphe_tempo)
                     if k == 0:
                         graphe_tempo.append(self.copie_lst(graphe_tempo[k][:taille_point_liaison]))
                     else:
@@ -456,52 +455,187 @@ class Graphe:
                     for j in range(1, len(graphe_tempo[k + self.taille * i])):
                         graphe_tempo[k + self.taille * i][j] += self.taille * i
 
-                print("ok" + str(self.taille * i + 1) + "\n")
-
                 graphe_tempo[0].append(self.taille * i + 1)
                 graphe_tempo[self.taille * i].append(1)
             
             new_graphe = self.copie_lst(graphe_tempo)
             niveau -= 1
-            self.taille += self.taille * 3
-            self.giga_graphe(niveau, new_graphe) 
+            self.taille += self.taille * nb_graphe
+            self.giga_graphe_un_point_commun_methode1(niveau, new_graphe) 
 
-    """
-    def giga_graphe_deux_point_commun(self, niveau, graphe):
+    def giga_graphe_deux_point_commun_methode1(self, niveau, graphe):
         if niveau == 0:
             print(graphe)
             for i in range(len(graphe)):
-                graphe[i][0][0] += i * 0.8 - 100
-                graphe[i][0][1] += i * 0.8
-                graphe[i][0][3] += i * 0.8 - 100
-                graphe[i][0][4] += i * 0.8
+                graphe[i][0][0] += i * 0.4 - 50
+                graphe[i][0][1] += i * 0.4
+                graphe[i][0][3] += i * 0.4 - 50
+                graphe[i][0][4] += i * 0.4
             self.l_adj = self.copie_lst(graphe)
         else:
+            nb_graphe = 5
             graphe_tempo = self.copie_lst(graphe)
-            taille_point_liaison = len(graphe_tempo[0])
+            taille_point_liaison1 = len(graphe_tempo[0])
+            taille_point_liaison2 = len(graphe_tempo[1])
 
-            for i in range(1, 4):
+            for i in range(1, nb_graphe + 1):
                 for k in range(self.taille):
-                    print("yooooooo")
-                    print(graphe_tempo)
                     if k == 0:
-                        graphe_tempo.append(self.copie_lst(graphe_tempo[k][:taille_point_liaison]))
+                        graphe_tempo.append(self.copie_lst(graphe_tempo[k][:taille_point_liaison1]))
+                    elif k == 1:
+                        graphe_tempo.append(self.copie_lst(graphe_tempo[k][:taille_point_liaison2]))
                     else:
                         graphe_tempo.append(self.copie_lst(graphe_tempo[k]))
                     for j in range(1, len(graphe_tempo[k + self.taille * i])):
                         graphe_tempo[k + self.taille * i][j] += self.taille * i
 
-                print("ok" + str(self.taille * i + 1) + "\n")
-
                 graphe_tempo[0].append(self.taille * i + 1)
+                graphe_tempo[1].append(self.taille * i + 2)
                 graphe_tempo[self.taille * i].append(1)
+                graphe_tempo[self.taille * i + 1].append(2)
             
             new_graphe = self.copie_lst(graphe_tempo)
             niveau -= 1
-            self.taille += self.taille * 3
-            self.giga_graphe(niveau, new_graphe) 
-    """
+            self.taille += self.taille * nb_graphe
+            self.giga_graphe_deux_point_commun_methode1(niveau, new_graphe)
 
+    def giga_graphe_trois_point_commun_methode1(self, niveau, graphe):
+        if niveau == 0:
+            print(graphe)
+            for i in range(len(graphe)):
+                graphe[i][0][0] += i * 0.4 - 50
+                graphe[i][0][1] += i * 0.4
+                graphe[i][0][3] += i * 0.4 - 50
+                graphe[i][0][4] += i * 0.4
+            self.l_adj = self.copie_lst(graphe)
+        else:
+            nb_graphe = 5
+            graphe_tempo = self.copie_lst(graphe)
+            taille_point_liaison1 = len(graphe_tempo[0])
+            taille_point_liaison2 = len(graphe_tempo[1])
+            taille_point_liaison3 = len(graphe_tempo[2])
+            taille_point_liaison4 = len(graphe_tempo[3])
+            taille_point_liaison5 = len(graphe_tempo[4])
+            taille_point_liaison6 = len(graphe_tempo[5])
+
+            for i in range(1, nb_graphe + 1):
+                for k in range(self.taille):
+                    if k == 0:
+                        graphe_tempo.append(self.copie_lst(graphe_tempo[k][:taille_point_liaison1]))
+                    elif k == 1:
+                        graphe_tempo.append(self.copie_lst(graphe_tempo[k][:taille_point_liaison2]))
+                    elif k == 2:
+                        graphe_tempo.append(self.copie_lst(graphe_tempo[k][:taille_point_liaison3]))
+                    else:
+                        graphe_tempo.append(self.copie_lst(graphe_tempo[k]))
+                    for j in range(1, len(graphe_tempo[k + self.taille * i])):
+                        graphe_tempo[k + self.taille * i][j] += self.taille * i
+
+                graphe_tempo[0].append(self.taille * i + 1)
+                graphe_tempo[1].append(self.taille * i + 2)
+                graphe_tempo[2].append(self.taille * i + 3)
+                graphe_tempo[self.taille * i].append(1)
+                graphe_tempo[self.taille * i + 1].append(2)
+                graphe_tempo[self.taille * i + 2].append(3)
+            
+            new_graphe = self.copie_lst(graphe_tempo)
+            niveau -= 1
+            self.taille += self.taille * nb_graphe
+            self.giga_graphe_trois_point_commun_methode1(niveau, new_graphe)    
+
+    def giga_graphe_un_point_commun_methode2(self, niveau, graphe):
+        if niveau == 0:
+            print(graphe)
+            for i in range(len(graphe)):
+                graphe[i][0][0] += i * 0.4 - 50
+                graphe[i][0][1] += i * 0.4
+                graphe[i][0][3] += i * 0.4 - 50
+                graphe[i][0][4] += i * 0.4
+            self.l_adj = self.copie_lst(graphe)
+        else:
+            nb_graphe = 5
+            graphe_tempo = self.copie_lst(graphe)
+
+            for i in range(1, nb_graphe + 1):
+                for k in range(self.taille):
+                    graphe_tempo.append(self.copie_lst(graphe_tempo[k]))
+                    for j in range(1, len(graphe_tempo[k + self.taille * i])):
+                        graphe_tempo[k + self.taille * i][j] += self.taille * i
+
+            graphe_tempo.append([[50, 50, -1, 50, 50]])
+            for i in range(nb_graphe):
+                graphe_tempo[len(graphe_tempo)-1].append(self.taille * i + 1)
+                graphe_tempo[self.taille * i].append(len(graphe_tempo))
+            
+            new_graphe = self.copie_lst(graphe_tempo)
+            niveau -= 1
+            self.taille += self.taille * nb_graphe + 1
+            self.giga_graphe_un_point_commun_methode2(niveau, new_graphe)    
+
+    def giga_graphe_deux_point_commun_methode2(self, niveau, graphe):
+        if niveau == 0:
+            print(graphe)
+            for i in range(len(graphe)):
+                graphe[i][0][0] += i * 0.4 - 50
+                graphe[i][0][1] += i * 0.4
+                graphe[i][0][3] += i * 0.4 - 50
+                graphe[i][0][4] += i * 0.4
+            self.l_adj = self.copie_lst(graphe)
+        else:
+            nb_graphe = 5
+            graphe_tempo = self.copie_lst(graphe)
+
+            for i in range(1, nb_graphe + 1):
+                for k in range(self.taille):
+                    graphe_tempo.append(self.copie_lst(graphe_tempo[k]))
+                    for j in range(1, len(graphe_tempo[k + self.taille * i])):
+                        graphe_tempo[k + self.taille * i][j] += self.taille * i
+
+            graphe_tempo.append([[50, 50, -1, 50, 50]])
+            for i in range(nb_graphe):
+                graphe_tempo[len(graphe_tempo)-1].append(self.taille * i + 1)
+                graphe_tempo[len(graphe_tempo)-1].append(self.taille * i + 2)
+                graphe_tempo[self.taille * i].append(len(graphe_tempo))
+                graphe_tempo[self.taille * i + 1].append(len(graphe_tempo))
+            
+            new_graphe = self.copie_lst(graphe_tempo)
+            niveau -= 1
+            self.taille += self.taille * nb_graphe + 1
+            self.giga_graphe_deux_point_commun_methode2(niveau, new_graphe)    
+
+    def giga_graphe_trois_point_commun_methode2(self, niveau, graphe):
+        if niveau == 0:
+            print(graphe)
+            for i in range(len(graphe)):
+                graphe[i][0][0] += i * 0.4 - 50
+                graphe[i][0][1] += i * 0.2
+                graphe[i][0][3] += i * 0.4 - 50
+                graphe[i][0][4] += i * 0.15
+            self.l_adj = self.copie_lst(graphe)
+        else:
+            nb_graphe = 2
+            graphe_tempo = self.copie_lst(graphe)
+
+            for i in range(1, nb_graphe + 1):
+                for k in range(self.taille):
+                    graphe_tempo.append(self.copie_lst(graphe_tempo[k]))
+                    for j in range(1, len(graphe_tempo[k + self.taille * i])):
+                        graphe_tempo[k + self.taille * i][j] += self.taille * i
+
+            graphe_tempo.append([[50, 50, -1, 50, 50]])
+            for i in range(nb_graphe):
+                graphe_tempo[len(graphe_tempo)-1].append(self.taille * i + 1)
+                graphe_tempo[len(graphe_tempo)-1].append(self.taille * i + 2)
+                graphe_tempo[len(graphe_tempo)-1].append(self.taille * i + 3)
+                graphe_tempo[self.taille * i].append(len(graphe_tempo))
+                graphe_tempo[self.taille * i + 1].append(len(graphe_tempo))
+                graphe_tempo[self.taille * i + 2].append(len(graphe_tempo))
+            
+            new_graphe = self.copie_lst(graphe_tempo)
+            niveau -= 1
+            self.taille += self.taille * nb_graphe + 1
+            self.giga_graphe_trois_point_commun_methode2(niveau, new_graphe)    
+    
     def compte_couleur_graphe(self):
         """Compte les couleurs d'un graphe"""
         couleurs = []
