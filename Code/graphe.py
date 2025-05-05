@@ -432,6 +432,21 @@ class Graphe:
         self.l_adj = g
         return self.l_adj
 
+    def permute_graphe(self):
+        graphe = self.l_adj
+        perm = list(range(1, len(graphe)+1))
+        random.shuffle(perm)
+        for adj in graphe:
+            for i in range(1, len(adj)):
+                adj[i] = perm[adj[i]-1]
+
+        new_graphe = [[]]*len(graphe)
+        
+        for i in range(len(graphe)):
+            new_graphe[perm[i]-1] = graphe[i]
+
+        self.l_adj = new_graphe
+            
     def giga_graphe_un_point_commun_methode1(self, niveau, graphe):
         if niveau == 0:
             print(graphe)
@@ -553,7 +568,7 @@ class Graphe:
                 graphe[i][0][4] += i * 0.4
             self.l_adj = self.copie_lst(graphe)
         else:
-            nb_graphe = 5
+            nb_graphe = 4
             graphe_tempo = self.copie_lst(graphe)
 
             for i in range(1, nb_graphe + 1):

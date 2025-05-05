@@ -74,8 +74,16 @@ random.shuffle(ordre2)
 # G.glouton2()
 
 # Algorithme de colorimétrie numéro 3
-G.giga_graphe_trois_point_commun_methode2(3, G.l_adj)
-G.algo3(G.copie_lst(G.l_adj))
+
+G.giga_graphe_un_point_commun_methode1(2, G.l_adj)
+# G.giga_graphe_trois_point_commun_methode2(3, G.l_adj)
+G.permute_graphe()
+ordre1 = list(range(1, G.taille + 1))
+ordre2 = list(range(1, G.taille + 1))
+random.shuffle(ordre2)
+G.glouton2()
+# G.algo3(G.copie_lst(G.l_adj))
+print(G.compte_couleur_graphe())
 
 """
 G.stat_compare_algo1_algo2_sur_graph(100, p, WIDTH, HEIGHT, "graphe_planaire_aleatoire")
